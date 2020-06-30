@@ -24,19 +24,18 @@ class Setup():
         self.L4_min = int(self.geometry['IL4_min'][0])
         self.L4_max = int(self.geometry['IL4_max'][0])
 
-        self.M2D, self. M = 0, 0
+        self.ActivationMatrix, self.CoordinateMatrix = 0, 0
     
     def construct(self):
         self.ActiveFibers()
         self.FindRisingEdge()
+        self.ConstructActivationMatrix()
 
-        self.Set_2D_Data()
-        
         self.time = self.time - self.time[0]
         
         self.SetCoordinates()
         
-        return self.data, self.M2D, self.M
+        return self.data, self.ActivationMatrix, self.CoordinateMatrix
 
 
 
@@ -46,6 +45,8 @@ class Setup():
 
         for i in range(len(self.data['N'])):
             self.count[t[i]//self.t_res: (t[i]+ tot[i])//self.t_res] += 1
+
+        return None
 
     def FindRisingEdge(self):
 
@@ -63,16 +64,16 @@ class Setup():
 
         return None
 
-    def Set_2D_Data(self):
-        self.M2D = np.empty((int(self.geometry['N_fibers'][0]),len(self.time)))
-        self.M2D[:] = np.NaN
+    def ConstructActivationMatrix(self):
+        self.ActivationMatrix = np.empty((int(self.geometry['N_fibers'][0]),len(self.time)))
+        self.ActivationMatrix[:] = np.NaN
     
         N = np.array(self.data['N'], dtype = int)
         t = np.array(self.data['t'], dtype = int)
         tot = np.array(self.data['tot'],  dtype = int)
         
         for i in range(len(N)):
-            self.M2D[N[i], (t[i]-self.t0)//self.t_res:(t[i]-self.t0+tot[i])//self.t_res] = 1
+            self.ActivationMatrix[N[i], (t[i]-self.t0)//self.t_res:(t[i]-self.t0+tot[i])//self.t_res] = 1
 
         return None
 
@@ -81,9 +82,9 @@ class Setup():
         """
         start = time.time()
         N = np.arange(0,self.geometry['N_fibers'][0],1)
-        self.M = np.empty((len(N), 3))
-        self.M[:,0] = N
-        self.M[:,1:] = np.NaN
+        self.CoordinateMatrix = np.empty((len(N), 3))
+        self.CoordinateMatrix[:,0] = N
+        self.CoordinateMatrix[:,1:] = np.NaN
 
 
         inter_dist_fiber = self.geometry['dist_fiber_center_mm'][0]
@@ -91,17 +92,17 @@ class Setup():
         dist_from_center = self.geometry['dist_from_center_mm'][0]
         
 
-        self.M[self.L1_min:self.L1_max+1,1] = self.geometry['r1_mm'][0]
-        self.M[self.L1_min:self.L1_max+1,2] = self.M[self.L1_min:self.L1_max + 1,0]*inter_dist_fiber+scew - dist_from_center
+        self.CoordinateMatrix[self.L1_min:self.L1_max+1,1] = self.geometry['r1_mm'][0]
+        self.CoordinateMatrix[self.L1_min:self.L1_max+1,2] = self.CoordinateMatrix[self.L1_min:self.L1_max + 1,0]*inter_dist_fiber+scew - dist_from_center
         
-        self.M[self.L2_min:self.L2_max+1,1] = self.geometry['r2_mm'][0]
-        self.M[self.L2_min:self.L2_max+1,2] = self.M[self.L1_min:self.L1_max + 2,0]*inter_dist_fiber - dist_from_center
+        self.CoordinateMatrix[self.L2_min:self.L2_max+1,1] = self.geometry['r2_mm'][0]
+        self.CoordinateMatrix[self.L2_min:self.L2_max+1,2] = self.CoordinateMatrix[self.L1_min:self.L1_max + 2,0]*inter_dist_fiber - dist_from_center
         
-        self.M[self.L3_min:self.L3_max+1,1] = self.geometry['r3_mm'][0]
-        self.M[self.L3_min:self.L3_max+1,2] = self.M[self.L1_min:self.L1_max + 1,0]*inter_dist_fiber+scew - dist_from_center
+        self.CoordinateMatrix[self.L3_min:self.L3_max+1,1] = self.geometry['r3_mm'][0]
+        self.CoordinateMatrix[self.L3_min:self.L3_max+1,2] = self.CoordinateMatrix[self.L1_min:self.L1_max + 1,0]*inter_dist_fiber+scew - dist_from_center
         
-        self.M[self.L4_min:self.L4_max+1,1] = self.geometry['r4_mm'][0]
-        self.M[self.L4_min:self.L4_max+1,2] = self.M[self.L1_min:self.L1_max + 2,0]*inter_dist_fiber - dist_from_center
+        self.CoordinateMatrix[self.L4_min:self.L4_max+1,1] = self.geometry['r4_mm'][0]
+        self.CoordinateMatrix[self.L4_min:self.L4_max+1,2] = self.CoordinateMatrix[self.L1_min:self.L1_max + 2,0]*inter_dist_fiber - dist_from_center
         
         end = time.time()
         print('SetCoordinates: %.5f' % (end - start), 's')
