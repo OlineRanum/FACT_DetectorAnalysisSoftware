@@ -12,13 +12,13 @@ RF = ReadFiles(PathData, folder)
 data = RF.ToCSV()
 
 src = Setup(data)
-data = src.construct() 
+data, M2D, M = src.construct() 
 
-#P = plot(data)
+P = plot(data, M2D,M)
 #P.plot_FACT()
-
+P.plot_FACT_live()
 
 end = time.time()
-print('Full Run: %.2f' % (end - start), 's')
+print('Full Run: %.5f' % (end - start), 's')
 
 
