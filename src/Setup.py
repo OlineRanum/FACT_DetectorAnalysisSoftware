@@ -75,25 +75,6 @@ class Setup():
             self.M2D[N[i], (t[i]-self.t0)//self.t_res:(t[i]-self.t0+tot[i])//self.t_res] = 1
 
         return None
-    
-    def FindCoordinates(self):
-        """ All hardcoded values r and z values are in mm
-        """
-        self.data['r'], self.data['z'] = np.NaN, np.NaN
-
-        self.data.loc[self.data['N']  <= L1_max, 'r'] =  self.geometry['r1_mm'][0]
-        self.data.loc[self.data['N']  <= L1_max, 'z'] = self.data['N']*1.2 + 0.6 - dist_from_center
-        
-        self.data.loc[(self.data['N']  >= 200) & (self.data['N'] <= 398), 'r'] = 98.0
-        self.data.loc[(self.data['N']  >= 200) & (self.data['N'] <= 398), 'z'] = (self.data['N']-200)*1.2 - self.geometry['dist_from_center_mm'].iloc[0]
-        
-        self.data.loc[(self.data['N']  >= 400) & (self.data['N'] <= 597), 'r'] = 70.86
-        self.data.loc[(self.data['N']  >= 400) & (self.data['N'] <= 597), 'z'] = (self.data['N']-400)*1.2 + 0.6 -self.geometry['dist_from_center_mm'].iloc[0]
-        
-        self.data.loc[self.data['N']  >= 600, 'r'] = 70.0
-        self.data.loc[self.data['N']  >= 600, 'z'] = (self.data['N']-600)*1.2 - self.geometry['dist_from_center_mm'].iloc[0]
-
-        return self.data
 
     def SetCoordinates(self):
         """ All hardcoded values r and z values are in mm
