@@ -22,6 +22,7 @@ ResetTime:                   Sets time frames to 0 at the given time before the 
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 class Setup():
 
@@ -50,20 +51,20 @@ class Setup():
     def FindRisingEdge(self, df, t_resolution, edge_lim, edge_buffer):
         t   = np.array(df['t'], dtype = int)
         tot = np.array(df['tot'],  dtype = int)
-
         for i in range(len(df['N'])):
-            self.count[t[i]//t_resolution: (t[i]+ tot[i])//t_resolution] = 1
+            self.count[t[i]//t_resolution: (t[i]+ tot[i])//t_resolution] += 1
+
         
         # Find index where count > param.rising_edge and give buffer = param.edge_buffer
         self.EdgeIndex = int(np.argmax(self.count >= edge_lim)-edge_buffer)
+        return self.EdgeIndex, self.count
 
     def CropData(self):
-        EndIndex = self.EdgeIndex+int(self.param.frames)
+        EndIndex_ = self.EdgeIndex+int(self.param.frames)
         tmin = self.time[self.EdgeIndex]
-        tmax = self.time[EndIndex]
-
-        self.time = self.time[self.EdgeIndex: EndIndex]
-        self.count = self.count[self.EdgeIndex: EndIndex]
+        tmax = self.time[EndIndex_]
+        self.time = self.time[self.EdgeIndex: EndIndex_]
+        self.count = self.count[self.EdgeIndex: EndIndex_]
         self.t0 = int(self.time[0])
 
         self.data = self.data[(self.data['t'] >= tmin) & (self.data['t'] <= tmax)].reset_index(drop = True)

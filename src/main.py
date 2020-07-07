@@ -4,7 +4,7 @@ from AnalysisToolBox import AnalysisToolBox
 from plot import plot
 from LoadData import LoadData
 from FileConverter import FileConverter
-from UnitTesting import UnitTesting
+from test_Setup import TestSetup
 import time
 
 start = time.time()
@@ -24,11 +24,6 @@ param.Initiate()
 RF = ReadFiles(PathData, folder)
 data = RF.GetCSV()
 
-UT = UnitTesting()
-UT.SetupTestingEnvironment()
-
-
-"""
 build = Setup(data, param)
 data  = build.Initiate() 
 
@@ -37,7 +32,7 @@ ATB.Initiate_Standard_Analysis()
 
 #P = plot(data, param, build)
 #P.plot_FACT_live()
-"""
+
 end = time.time()
 print('Full Run: %.5f' % (end - start), 's')
 
