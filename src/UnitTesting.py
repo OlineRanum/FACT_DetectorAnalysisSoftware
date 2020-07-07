@@ -11,40 +11,43 @@ from numpy.random import randint
 class UnitTesting(unittest.TestCase):
 
     def SetupTestingEnvironment(self):
-        t_resolution =  5
-        N_fibers     =  20
-        N_points     =  int(1e4)
+        self.t_resolution =  5
+        self.N_fibers     =  40
+        self.N_points     =  int(1e4)
+        self.nr_seed = 142
 
         # Test Preworked Matrix Sample
         df, TEST_ActivationMatrix, time = self.generate_preworked_sample()
         test_build = Setup(df, None)
-        self.test_ConstructActivationMatrix(test_build, df, time, TEST_ActivationMatrix, t_resolution)
+        self.test_ConstructActivationMatrix(test_build, df, time, TEST_ActivationMatrix)
 
         # Test Random Matrix Sample
-        df, TEST_ActivationMatrix, time = self.generate_random_sample(N_points, N_fibers)
+        df, TEST_ActivationMatrix, time = self.generate_random_sample()
         test_build = Setup(df, None)
-        self.test_ConstructActivationMatrix(test_build, df, time, TEST_ActivationMatrix,t_resolution)
+        self.test_ConstructActivationMatrix(test_build, df, time, TEST_ActivationMatrix)
 
 
-    def generate_random_sample(self, n_size, n_fibers):
-        seed(142)
-        N = randint(0,n_fibers, n_size)
-        t = np.random.poisson(50, n_size)*5
+
+
+    def generate_random_sample(self):
+        seed(self.nr_seed)
+        N = randint(0,self.N_fibers, self.N_points)
+        t = np.random.poisson(50, self.N_points)*5
         time = np.arange(0, t[np.argmax(t)] + 5, 5) 
-        tot = (np.random.poisson(3, n_size)+1)*5
-        z = randint(0,10, n_size)
-        r = randint(0,10, n_size)
+        tot = (np.random.poisson(3, self.N_points)+1)*5
+        z = randint(0,10, self.N_points)
+        r = randint(0,10, self.N_points)
 
         d = {'N': N, 't': t, 'tot': tot, 'z': z, 'r': r, 'key': N}
         df = pd.DataFrame(data=d)
 
-        TEST_ActivationMatrix = np.zeros((len(df['N']), len(time)))
+        TEST_ActivationMatrix = np.zeros((self.N_fibers, len(time)))
         for i in range(len(df['N'])):
-            TEST_ActivationMatrix[df['N'].iloc[i], df['t'].iloc[i]//5:(df['t'].iloc[i] + df['tot'].iloc[i])//5] = 1
+            TEST_ActivationMatrix[df['N'].iloc[i], df['t'].iloc[i]//self.t_resolution:(df['t'].iloc[i] + df['tot'].iloc[i])//self.t_resolution] = 1
         
         count = np.sum(TEST_ActivationMatrix, axis = 0)
-        plt.plot(time, count)
-        plt.show()
+      #  plt.plot(time, count)
+      #  plt.show()
 
         return df, TEST_ActivationMatrix, time
 
@@ -60,7 +63,7 @@ class UnitTesting(unittest.TestCase):
         d = {'N': N, 't': t, 'tot': tot, 'z': z, 'r': r, 'key': N}
         df = pd.DataFrame(data=d)
         
-        TEST_ActivationMatrix = np.zeros((len(df['N']), len(time)))
+        TEST_ActivationMatrix = np.zeros((self.N_fibers, len(time)))
         TEST_ActivationMatrix[[0], 0] = 1
         TEST_ActivationMatrix[[0,7], 1] = 1
         TEST_ActivationMatrix[[1,2,8], 3] = 1
@@ -72,18 +75,21 @@ class UnitTesting(unittest.TestCase):
         
 
 
-    def test_ConstructActivationMatrix(self, test_build, df, time, test_matrix, t_resolution):  
-
-        MatrixBuild = test_build.ConstructActivationMatrix(df, len(df['N']), time, t_resolution)
+    def test_ConstructActivationMatrix(self, test_build, df, time, test_matrix):  
+        
+        MatrixBuild = test_build.ConstructActivationMatrix(df, self.N_fibers, time, self.t_resolution)
   #     MatrixBuild Cast NaN->0 for comparison
         where_are_NaNs = np.isnan(MatrixBuild)
+        
         MatrixBuild[where_are_NaNs] = 0
+        
+        self.assertEqual(np.shape(MatrixBuild),np.shape(test_matrix))
         self.assertEqual(MatrixBuild.flatten().tolist(), test_matrix.flatten().tolist())
-
+        
 
         
 
-    def test_FindRisingEdge(self, df, t_resolution):
+    def test_FindRisingEdge(self, df):
         edge_lim = 1
         edge_buffer = 1 
-        test_build.FindRisingEdge(df, t_resolution, edge_lim, edge_buffer)
+        test_build.FindRisingEdge(df, self.t_resolution, edge_lim, edge_buffer)

@@ -77,8 +77,7 @@ class Setup():
         t = np.array(df['t'], dtype = int)
         tot = np.array(df['tot'],  dtype = int)
         t0_ = int(time_frame[0])
-        print(t0_)
-        
+
         # Count all active fibers
         for i in range(len(N)):
             self.ActivationMatrix[N[i], (t[i]-t0_)//t_resolution:(t[i]-self.t0+tot[i])//t_resolution] = 1
