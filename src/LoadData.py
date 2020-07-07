@@ -58,6 +58,7 @@ class LoadData():
         # Physical parameters
         self.max_travel_time = self.geometry['max_travel_time'][0]
         self.t_res = int(self.geometry['Time_resolution_ns'][0])
+        self.Track_radius = self.geometry['Track_radius'][0]
 
         # Map structure
         self.CoordinateMatrix = np.empty((0,0))
