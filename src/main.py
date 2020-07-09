@@ -6,6 +6,7 @@ from LoadData import LoadData
 from FileConverter import FileConverter
 from test_Setup import TestSetup
 import time
+from RunAnalysis import RunAnalysis
 
 start = time.time()
 
@@ -21,16 +22,11 @@ FC.Txt2CSV()
 param = LoadData(PathSettings_csv)
 param.Initiate() 
 
-RF = ReadFiles(PathData, folder)
-data = RF.GetCSV()
 
-build = Setup(data, param)
-data  = build.Initiate() 
-
-ATB = AnalysisToolBox(data, param, build)
-df_z = ATB.Initiate_Standard_Analysis()
-
-P = plot(data, param, build)
+RA = RunAnalysis(param, PathData, folder)
+#df_z = RA.RunSingleFileAnalysis('169627_11.txt')
+df_z = RA.RunMultiFileAnalysis()
+P = plot(None, param, None)
 #P.plot_FACT_live()
 P.hist(df_z)
 

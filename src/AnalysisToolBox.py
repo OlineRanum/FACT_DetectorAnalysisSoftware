@@ -150,7 +150,9 @@ class AnalysisToolBox():
         """ 
         #Using that f(x) = a*x + b
         """
-        a = (r2-r1)/(z2-z1)
-        b = r1 - a*z1
-        z_pos = -b/a
-        return z_pos
+        if z2 != z1:
+            a = (r2-r1)/(z2-z1)
+            b = r1 - a*z1
+            return -b/a
+        else: 
+            return z1                
