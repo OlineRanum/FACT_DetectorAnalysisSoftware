@@ -28,10 +28,11 @@ build = Setup(data, param)
 data  = build.Initiate() 
 
 ATB = AnalysisToolBox(data, param, build)
-ATB.Initiate_Standard_Analysis()
+df_z = ATB.Initiate_Standard_Analysis()
 
-#P = plot(data, param, build)
+P = plot(data, param, build)
 #P.plot_FACT_live()
+P.hist(df_z)
 
 end = time.time()
 print('Full Run: %.5f' % (end - start), 's')

@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from plot import plot
 from tabulate import tabulate
+from collections import Counter
 
 
 class AnalysisToolBox():
@@ -20,24 +21,37 @@ class AnalysisToolBox():
         
     def Initiate_Standard_Analysis(self): 
         self.DefineTailData(self.param.tail_time,self.param.CoordinateMatrix, self.param.L3_min)
-        self.FindClusters(self.Layer_1,self.param.t_res, self.param.Track_radius)
-        self.FindClusters(self.Layer_2, self.param.t_res, self.param.Track_radius)
+        cluster_L1 = self.FindClusters(self.Layer_1,self.param.t_res, self.param.Track_radius)
+        cluster_L2 = self.FindClusters(self.Layer_2, self.param.t_res, self.param.Track_radius)
+        df_z = self.TrackPath(cluster_L1, cluster_L2)
+        return df_z
+
+    def find_bin(self, value, bins):
+        """ bins is a list of tuples, like [(0,20), (20, 40), (40, 60)],
+            binning returns the smallest index i of bins so that
+            bin[i][0] <= value < bin[i][1]
+        """
+
+        for i in range(0, len(bins)):
+            if bins[i][0] <= value < bins[i][1]:
+                return i
+        return -1
 
 
-    
     def DefineTailData(self, tail_cut, CoordinateMatrix_, layer_cut):
         self.data_ = self.data[self.data['t'] > tail_cut]
         self.data = self.data_.reset_index(drop = True)
 
-        L1 = self.data[self.data['N'] < layer_cut]
-        L2 = self.data[self.data['N'] >= layer_cut]
+        L1 = self.data[self.data['N'] >= layer_cut]                                                     # Inner Layer
+        L2 = self.data[self.data['N'] < layer_cut]                                                      # Outer Layer
         CoordinateFrame = pd.DataFrame(CoordinateMatrix_, columns = ['N', 'r', 'z'])
         CoordinateFrame['N'] = CoordinateFrame['N'].astype(int)
         self.Layer_1 = pd.merge(L1, CoordinateFrame, on =['N'])
         self.Layer_2 = pd.merge(L2, CoordinateFrame, on =['N'])
         self.Layer_1['key'] = np.arange(0, len(self.Layer_1), 1)
         self.Layer_2['key'] = np.arange(0, len(self.Layer_2), 1)
-        
+        #print(self.Layer_1.to_markdown())
+        #print(self.Layer_2.to_markdown())
 
         #P = plot(self.data, self.param, self.build)
         #P.scatter(self.Layer_2['z'], self.Layer_2['r'], self.Layer_2['t'])
@@ -78,34 +92,49 @@ class AnalysisToolBox():
         return dfv
 
 
-"""
+    def TrackPath(self, df1, df2):
+        """ 
+        Assumptions:
+        df1 = L1 = The layer with the smallest radius
+        
+        - we only concider the paths going from layer 1 to layer 2
 
-    def compare(self, df1, df2):
+        """
+
         z_pos, z_weight = [], []
+        #print(df2.toz_pos, z_weight_markdown())
+        #print(df1.to_markdown())
         for i in range(len(df1)):
-            bar = np.where((df2['t'].values >= df1['t'].iloc[i] - self.maxTravelT) & (df2['t'].values <= df1['t'].iloc[i] + self.maxTravelT))[0]
+            bar = np.where((df2['t'].values >= df1['t'].loc[i]) & (df2['t'].values <= df1['t'].loc[i] + self.param.max_travel_time))[0]
             zp, zw = self.Z_distribution(df1, df2, i, bar)
             if zp:
-                z_pos.append(zp)
-                z_weight.append(zw)
-        print(z_pos)
+                for j in range(len(zp)):
+                    z_pos.append(zp[j])
+                    z_weight.append(zw[j])
+        df_z = pd.DataFrame({'z_pos': z_pos, 'z_weight': z_weight})
+        df_z = df_z.sort_values(by = 'z_pos')
+        return df_z
+        
 
 
     def Z_distribution(self, df1, df2, i, bar):
         z_temp = np.zeros(200)
-        z_vals = []
-        z_weight = []
+        z_vals, z_weight = [], []
+        r1 = df1['r'].loc[i]
+        z1 = df1['z'].loc[i]
+        tossed = 0
         for j in bar:
-            r1 = self.param.CoordinateMatrix[int(df1['N'].iloc[i]),1]
-            r2 = self.param.CoordinateMatrix[int(df2['N'].iloc[j]),1]
-            z1 = self.param.CoordinateMatrix[int(df1['N'].iloc[i]),2]
-            z2 = self.param.CoordinateMatrix[int(df2['N'].iloc[j]),2]
-            z_pos1 = self.FindOriginZ_extrapolate(r1, r2, z1, z2)
-            z_pos2 = self.FindOriginZ(r1, r2, z1, z2)
-            z_pos = z_pos1
-            if (z_pos < 500000 and z_pos >-5000000):
+            r2 = df2['r'].loc[j]
+            z2 = df2['z'].loc[j]
+            z_pos = self.FindOriginZ_extrapolate(r1, r2, z1, z2)
+            if (z_pos < self.param.last_fiber_position) and (z_pos >-self.param.last_fiber_position):
                 z_vals.append(z_pos)
-                z_weight.append(1/bar.size)
+            else: 
+                tossed  += 1
+
+        if bar.size != tossed:
+            z_weight = np.ones(len(z_vals))/(bar.size - tossed)
+
         return z_vals, z_weight
 
 
@@ -118,4 +147,10 @@ class AnalysisToolBox():
         return z_pos
 
     def FindOriginZ_extrapolate(self,r1,r2,z1,z2):
-"""
+        """ 
+        #Using that f(x) = a*x + b
+        """
+        a = (r2-r1)/(z2-z1)
+        b = r1 - a*z1
+        z_pos = -b/a
+        return z_pos

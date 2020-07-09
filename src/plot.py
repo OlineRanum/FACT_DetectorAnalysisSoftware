@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import pandas as pd
 import seaborn as sns
+import numpy as np
 
 class plot():
 
@@ -58,4 +59,8 @@ class plot():
         z = self.param.CoordinateMatrix[:,2]*self.build.ActivationMatrix[:,0]
         self.line.set_data(z,r)
         anim = animation.FuncAnimation(fig, self.Animate, init_func=self.initAnimation,frames=self.param.frames, interval=self.fsize)
+        plt.show()
+
+    def hist(self, df_z):
+        plt.hist(df_z.z_pos, weights=df_z.z_weight, bins = np.arange(-120,120,2))
         plt.show()
