@@ -23,6 +23,7 @@ class AnalysisToolBox():
         self.FindClusters(self.Layer_1,self.param.t_res, self.param.Track_radius)
         self.FindClusters(self.Layer_2, self.param.t_res, self.param.Track_radius)
 
+
     
     def DefineTailData(self, tail_cut, CoordinateMatrix_, layer_cut):
         self.data_ = self.data[self.data['t'] > tail_cut]
@@ -37,12 +38,12 @@ class AnalysisToolBox():
         self.Layer_1['key'] = np.arange(0, len(self.Layer_1), 1)
         self.Layer_2['key'] = np.arange(0, len(self.Layer_2), 1)
         
-      #  print(self.Layer_1.to_markdown())
-
-        return self.data_
 
         #P = plot(self.data, self.param, self.build)
         #P.scatter(self.Layer_2['z'], self.Layer_2['r'], self.Layer_2['t'])
+
+
+        return self.data_
 
 
     def FindClusters(self, df, t_resolution, radius):
@@ -62,7 +63,11 @@ class AnalysisToolBox():
         dfv = pd.DataFrame(data=d)
         dfv = dfv.sort_values(['t','z']).reset_index(drop = True)
 
-        # Recombine cluster caps
+        # Recombine cluster gaps
+        """ It can happen that a vertex is not combined due to the isolation process above, 
+        this loop runs a doubble check to make sure that all clusters are in fact isolated clusters, and recobinates in the case 
+        of two neighboring events.
+        """
         i = 0
         while i < len(dfv)-1:
             if (abs(dfv['t'].loc[i] - dfv['t'].loc[i+1]) <= t_resolution) and (abs(dfv['z'].loc[i] - dfv['z'].loc[i+1]) <= radius):
@@ -72,104 +77,8 @@ class AnalysisToolBox():
 
         return dfv
 
-"""
-        while i < len(df):
-            z = df['z'].iloc[i]
-            temp_df_z = df[(df['z'] <= z+self.param.Track_radius) & (df['z'] >= z-self.param.Track_radius)]
-
-            temp_len_z = len(temp_df_z)
-            if temp_len_z > 1:
-                r_, z_, t_ = self.ResolveTimeCluster(temp_df_z)
-                for j in range(len(r_)):
-                    values.append([r_[j],z_[j],t_[j]])
-            else: 
-                values.append([temp_df_z['r'].iloc[0], temp_df_z['z'].iloc[0], temp_df_z['t'].iloc[0]])
-                self.k.append(temp_df_z['key'].iloc[0])
-            i += temp_len_z
-
-        
-        k = np.sort(np.array(self.k))
-        print(k)
-        Occurences = pd.DataFrame(np.vstack(values), columns = ['r', 'z', 't'])
-        print(Occurences.to_markdown())
-
-    def ResolveTimeCluster(self, df):
-        df = df.sort_values('t').reset_index(drop = True)
-        j = 0
-        r_, z_, t_ = [],[],[]
-        while j < len(df):
-            t = df['t'].iloc[j]
-            temp_df_t = df[(df['t'] <= t + self.param.t_res) & (df['t'] >= t-self.param.t_res)]
-            temp_len_t = len(temp_df_t)
-            if temp_len_t > 1:
-                r_.append(np.sum(temp_df_t['r'].values)/temp_len_t)
-                z_.append(np.sum(temp_df_t['z'].values)/temp_len_t)
-                t_.append(np.sum(temp_df_t['t'].values)/temp_len_t)
-                for key in temp_df_t['key'].values:
-                    self.k.append(key)
-            else: 
-                if temp_df_t['key'].iloc[0] not in self.k:    
-                    r_.append(temp_df_t['r'].iloc[0])   
-                    z_.append(temp_df_t['z'].iloc[0])   
-                    t_.append(temp_df_t['t'].iloc[0])   
-                    self.k.append(temp_df_t['key'].iloc[0])
-            j += temp_len_t
-        return r_, z_, t_
 
 """
-"""
-    def FindClusters(self, df):
-        values = []
-        i = 0
-        df = df.sort_values('z').reset_index(drop = True)
-        df['key'] = np.arange(0, len(df['N']),1)
-        while i < len(df):
-            z = df['z'].iloc[i]
-            temp_df_z = df[(df['z'] <= z+self.param.Track_radius) & (df['z'] >= z-self.param.Track_radius)]
-
-            temp_len_z = len(temp_df_z)
-            if temp_len_z > 1:
-                r_, z_, t_ = self.ResolveTimeCluster(temp_df_z)
-                for j in range(len(r_)):
-                    values.append([r_[j],z_[j],t_[j]])
-            else: 
-                values.append([temp_df_z['r'].iloc[0], temp_df_z['z'].iloc[0], temp_df_z['t'].iloc[0]])
-                self.k.append(temp_df_z['key'].iloc[0])
-            i += temp_len_z
-
-        
-        k = np.sort(np.array(self.k))
-        print(k)
-        Occurences = pd.DataFrame(np.vstack(values), columns = ['r', 'z', 't'])
-        print(Occurences.to_markdown())
-
-    def ResolveTimeCluster(self, df):
-        df = df.sort_values('t').reset_index(drop = True)
-        j = 0
-        r_, z_, t_ = [],[],[]
-        while j < len(df):
-            t = df['t'].iloc[j]
-            temp_df_t = df[(df['t'] <= t + self.param.t_res) & (df['t'] >= t-self.param.t_res)]
-            temp_len_t = len(temp_df_t)
-            if temp_len_t > 1:
-                r_.append(np.sum(temp_df_t['r'].values)/temp_len_t)
-                z_.append(np.sum(temp_df_t['z'].values)/temp_len_t)
-                t_.append(np.sum(temp_df_t['t'].values)/temp_len_t)
-                for key in temp_df_t['key'].values:
-                    self.k.append(key)
-            else: 
-                if temp_df_t['key'].iloc[0] not in self.k:    
-                    r_.append(temp_df_t['r'].iloc[0])   
-                    z_.append(temp_df_t['z'].iloc[0])   
-                    t_.append(temp_df_t['t'].iloc[0])   
-                    self.k.append(temp_df_t['key'].iloc[0])
-            j += temp_len_t
-        return r_, z_, t_
-
-        #self.compare(N3, N4)
-
-
-
 
     def compare(self, df1, df2):
         z_pos, z_weight = [], []
@@ -209,25 +118,4 @@ class AnalysisToolBox():
         return z_pos
 
     def FindOriginZ_extrapolate(self,r1,r2,z1,z2):
-        """ 
-#Using that f(x) = a*x + b
-"""
-        a = (r2-r1)/(z2-z1)
-        b = r1 - a*z1
-        z_pos = -b/a
-        return z_pos
-
-    def Crawler(self):
-        return 0 
-
-    def ClusterLocator(self):
-        return 0
-
-
-
-
-    def FindTail(self):
-        EdgeIndex = np.argmax(self.count >= self.geometry['edge'][0])
-        self.TailIndex = np.argmax(self.count[EdgeIndex:] <= self.geometry['tail'][0]) + EdgeIndex
-        return None
 """
