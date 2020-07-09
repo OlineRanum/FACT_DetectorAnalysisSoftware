@@ -27,8 +27,6 @@ class UnitTesting(unittest.TestCase):
         self.test_ConstructActivationMatrix(test_build, df, time, TEST_ActivationMatrix)
 
 
-
-
     def generate_random_sample(self):
         seed(self.nr_seed)
         N = randint(0,self.N_fibers, self.N_points)

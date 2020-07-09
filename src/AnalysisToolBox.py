@@ -12,39 +12,44 @@ class AnalysisToolBox():
         self.param = param
         self.build = build
         self.k = []
-        self.count = np.nansum(self.build.ActivationMatrix, axis = 0)
+        self.count = []
         self.TailIndex = 0
 
         self.Layer_1 = pd.DataFrame()
         self.Layer_2 = pd.DataFrame()
         
-    def Initiate_Standard_Analysis(self):
-        self.DefineTailData()
-        self.FindClusters(self.Layer_1)
-        self.FindClusters(self.Layer_2)
+    def Initiate_Standard_Analysis(self): 
+        self.DefineTailData(self.param.tail_time,self.param.CoordinateMatrix, self.param.L3_min)
+        self.FindClusters(self.Layer_1,self.param.t_res, self.param.Track_radius)
+        self.FindClusters(self.Layer_2, self.param.t_res, self.param.Track_radius)
 
     
-    def DefineTailData(self):
-        self.data = self.data[self.data['t'] > self.param.tail_time].reset_index(drop = True)
+    def DefineTailData(self, tail_cut, CoordinateMatrix_, layer_cut):
+        self.data_ = self.data[self.data['t'] > tail_cut]
+        self.data = self.data_.reset_index(drop = True)
 
-        L1 = self.data[self.data['N'] < self.param.L3_min]
-        L2 = self.data[self.data['N'] >= self.param.L3_min]
-        CoordinateFrame = pd.DataFrame(self.param.CoordinateMatrix, columns = ['N', 'r', 'z'])
+        L1 = self.data[self.data['N'] < layer_cut]
+        L2 = self.data[self.data['N'] >= layer_cut]
+        CoordinateFrame = pd.DataFrame(CoordinateMatrix_, columns = ['N', 'r', 'z'])
         CoordinateFrame['N'] = CoordinateFrame['N'].astype(int)
         self.Layer_1 = pd.merge(L1, CoordinateFrame, on =['N'])
         self.Layer_2 = pd.merge(L2, CoordinateFrame, on =['N'])
         self.Layer_1['key'] = np.arange(0, len(self.Layer_1), 1)
         self.Layer_2['key'] = np.arange(0, len(self.Layer_2), 1)
+        
+      #  print(self.Layer_1.to_markdown())
+
+        return self.data_
 
         #P = plot(self.data, self.param, self.build)
         #P.scatter(self.Layer_2['z'], self.Layer_2['r'], self.Layer_2['t'])
 
 
-    def FindClusters(self, df):
+    def FindClusters(self, df, t_resolution, radius):
         keys = np.array([])
         t, z, r = [],[],[]
         for i in range(len(df['t'])):
-            df_temp = df[(abs(df['t']-df['t'].iloc[i]) <= self.param.t_res) & (abs(df['z']-df['z'].iloc[i]) <= self.param.Track_radius)]
+            df_temp = df[(abs(df['t']-df['t'].iloc[i]) <= t_resolution) & (abs(df['z']-df['z'].iloc[i]) <= radius)]
             df_temp = df_temp[~df_temp.key.isin(keys)]
             temp_length = len(df_temp['t'])
             if temp_length > 0:
@@ -54,7 +59,18 @@ class AnalysisToolBox():
                 keys = np.append(keys,df_temp['key'].values)
         
         d = {'t': t, 'z': z, 'r': r}
-        return pd.DataFrame(data=d)
+        dfv = pd.DataFrame(data=d)
+        dfv = dfv.sort_values(['t','z']).reset_index(drop = True)
+
+        # Recombine cluster caps
+        i = 0
+        while i < len(dfv)-1:
+            if (abs(dfv['t'].loc[i] - dfv['t'].loc[i+1]) <= t_resolution) and (abs(dfv['z'].loc[i] - dfv['z'].loc[i+1]) <= radius):
+                dfv.loc[i] = dfv[i:i+2].mean()
+                dfv = dfv.drop([i+1]).reset_index(drop = True)
+            i += 1
+
+        return dfv
 
 """
         while i < len(df):

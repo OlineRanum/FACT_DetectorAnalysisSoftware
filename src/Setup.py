@@ -32,8 +32,8 @@ class Setup():
         self.data = data
 
         # Of Instance
-        self.time = np.arange(self.data['t'].iloc[0],self.data['t'].iloc[-1], 5)
-        self.count = np.empty(len(self.time))
+        self.time = np.arange(self.data['t'].iloc[0],self.data['t'].iloc[-1] + 5, 5)
+        self.count = np.zeros(len(self.time))
         self.t0 = 0
         self.EdgeIndex = 0
         self.ActivationMatrix = np.empty((0,0))
@@ -49,11 +49,10 @@ class Setup():
         return self.data
 
     def FindRisingEdge(self, df, t_resolution, edge_lim, edge_buffer):
-        t   = np.array(df['t'], dtype = int)
-        tot = np.array(df['tot'],  dtype = int)
+        t   = np.array(df['t'], dtype = int)//t_resolution
+        tot = np.array(df['tot'],  dtype = int)//t_resolution
         for i in range(len(df['N'])):
-            self.count[t[i]//t_resolution: (t[i]+ tot[i])//t_resolution] += 1
-
+            self.count[t[i]: t[i]+ tot[i]] += 1
         
         # Find index where count > param.rising_edge and give buffer = param.edge_buffer
         self.EdgeIndex = int(np.argmax(self.count >= edge_lim)-edge_buffer)
