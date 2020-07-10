@@ -1,9 +1,7 @@
+from src_VisualisationTools.plot import plot
+
 import numpy as np 
 import pandas as pd 
-import matplotlib.pyplot as plt
-from plot import plot
-from tabulate import tabulate
-from collections import Counter
 
 
 class AnalysisToolBox():
@@ -50,8 +48,7 @@ class AnalysisToolBox():
         self.Layer_2 = pd.merge(L2, CoordinateFrame, on =['N'])
         self.Layer_1['key'] = np.arange(0, len(self.Layer_1), 1)
         self.Layer_2['key'] = np.arange(0, len(self.Layer_2), 1)
-        #print(self.Layer_1.to_markdown())
-        #print(self.Layer_2.to_markdown())
+
 
         #P = plot(self.data, self.param, self.build)
         #P.scatter(self.Layer_2['z'], self.Layer_2['r'], self.Layer_2['t'])

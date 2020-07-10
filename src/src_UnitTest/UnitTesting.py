@@ -1,9 +1,11 @@
+import sys 
+sys.path.append("/home/oline/Documents/CERN/CHub/AEgIS/OnlineTools/LivePlotting/src/")
+
+from src_BuildSystem.Setup import Setup
+
 import unittest
 import pandas as pd 
 import numpy as np
-from Setup import Setup
-import matplotlib.pyplot as plt
-# generate random floating point values
 from numpy.random import seed
 from numpy.random import randint
 

@@ -1,43 +1,48 @@
 """ 
-Class Setup:: Restricts data to selected segment, build ActivationMatrix
+Main Function:: Select and restrict data, build ActivationMatrix
 
-Input:          
+Constructor input:          
     data:  Single runfile (runnumber.txt)
     param: List of specified parameters from class LoadData
 
-Direct Output:
-    Activation Matrix: 2D array size N_fibers X timebin                                  /// TOSPARSE 
+Output:
+    self.data:  Processed dataframe with col = ['N', 't', 'tot']
+                Removed all excessive information, centering around the rising edge and the 2 microseconds to follow               
 
-Indirect Output:
-    Cropped data: Dataset reduced to list within edge, frame and tail restrictions from LoadData
 -------------------------------------------------------
 Functions::
 
-Initiate:                    Initiate basic functions
-FindRisingEdge:              Finds point in time when particles arrive
-CropData:                    Restrict data to 
-ConstructActivationMatrix:   Builds matrix for animation of activated fibers
-ResetTime:                   Sets time frames to 0 at the given time before the rising edge
+    Initiate():                    Run basic analysis functions
+
+    FindRisingEdge():              Finds the rising edge of activated fibers, indicating the arrival of positronium
+
+    CropData():                    Restrict data to range given by rising edge and positronium decay time
+
+    ConstructActivationMatrix():   Builds matrix for animation of activated fibers
+                                   The Activation Matrix is a binary 2D matrix of N_fibers X Time, that is zero if a fiber is off
+                                   and one if the fiber is activated.
+
+    ResetTime():                   Resets the time to 0, given an index param.edge_buffer before the rising edge
 """
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 class Setup():
 
     def __init__(self, data, param):
-        # Imports
         self.param = param
         self.data = data
 
-        # Of Instance
-        self.time = np.arange(self.data['t'].iloc[0],self.data['t'].iloc[-1] + 5, 5)
+        # Timebase from min and max time in main dataframe, with intervals corresponding to the detectors temporal resolution
+        self.time = np.arange(self.data['t'].loc[np.argmin(self.data['t'])],self.data['t'].loc[np.argmax(self.data['t'])] + self.param.t_res, self.param.t_res)
+        # Array to be filled with the number of activated fibers at eatch time step
         self.count = np.zeros(len(self.time))
+        # The minimum time of the main dataframe
         self.t0 = 0
+        # 
         self.EdgeIndex = 0
-        self.ActivationMatrix = np.empty((0,0))
-    
+        self.ActivationMatrix = np.empty((0,0))    
 
     def Initiate(self):
         # The module called from main, that run the BASIC SetUp Modules
@@ -45,7 +50,7 @@ class Setup():
         self.CropData()
         self.ConstructActivationMatrix(self.data, self.param.N_fibers, self.time, self.param.t_res)
         self.ResetTime()
-
+        print(self.data.to_markdown())
         return self.data
 
     def FindRisingEdge(self, df, t_resolution, edge_lim, edge_buffer):

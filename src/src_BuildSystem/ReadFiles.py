@@ -1,8 +1,4 @@
 import pandas as pd
-import os
-import time
-import numpy as np
-
 
 class ReadFiles():
     def __init__(self, path, folder, filename):

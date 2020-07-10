@@ -1,8 +1,12 @@
 import unittest
 import pandas as pd 
 import numpy as np
-from AnalysisToolBox import AnalysisToolBox 
-# generate random floating point values
+
+import sys 
+sys.path.append("/home/oline/Documents/CERN/CHub/AEgIS/OnlineTools/LivePlotting/src/")
+
+from src_Analysis.AnalysisToolBox import AnalysisToolBox 
+
 
 
 class TestSetup(unittest.TestCase):
@@ -23,7 +27,6 @@ class TestSetup(unittest.TestCase):
         self.ActivationMatrix = pd.read_csv('src_UnitTest/ex1_ActivationMatrix.csv').values
         self.ATB = AnalysisToolBox(self.raw_dat, None, None)
         
-
     def test_DefineTailData(self):
         CoordinateMatrix_ = self.raw_dat[['N', 'r', 'z']].copy()
         
@@ -31,7 +34,7 @@ class TestSetup(unittest.TestCase):
         tail_cut_predefined  = 20 
         
         testing_df = self.ATB.DefineTailData(tail_cut_predefined, CoordinateMatrix_.values, layer_cut_predefined)
-        
+
         self.assertEqual(CoordinateMatrix_[17:]['N'].values.tolist(), testing_df['N'].values.tolist())
         self.assertEqual(CoordinateMatrix_[17:]['r'].values.tolist(), testing_df['r'].values.tolist())
         self.assertEqual(CoordinateMatrix_[17:]['z'].values.tolist(), testing_df['z'].values.tolist())

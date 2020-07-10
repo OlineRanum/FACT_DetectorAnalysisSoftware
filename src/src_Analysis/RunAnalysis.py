@@ -1,9 +1,12 @@
+from src_BuildSystem.ReadFiles import ReadFiles
+from src_BuildSystem.Setup import Setup
+from src_Analysis.AnalysisToolBox import AnalysisToolBox
+
 import pandas as pd
 import numpy as np
-from ReadFiles import ReadFiles
-from Setup import Setup
-from AnalysisToolBox import AnalysisToolBox
 import os
+
+
 
 class RunAnalysis():
 
@@ -16,6 +19,8 @@ class RunAnalysis():
 
 
     def RunMultiFileAnalysis(self):
+        """ 
+        """
         df = pd.DataFrame(columns = ['z_pos', 'z_weight'])
         for filename in os.listdir(self.path + self.folder):
             df_z = self.RunSingleFileAnalysis(filename)
@@ -24,6 +29,11 @@ class RunAnalysis():
         return df
     
     def RunSingleFileAnalysis(self, Filename):
+        """ 
+        Input: 
+            Filename: Name of the file in path + folder
+        output:
+        """
         RF = self.ReadFiles(self.path, self.folder, Filename)
         data = RF.GetCSV()
 
