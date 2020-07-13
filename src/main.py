@@ -4,7 +4,7 @@ from src_BuildSystem.FileConverter import FileConverter
 from src_Analysis.RunAnalysis import RunAnalysis
 
 import time
-start = time.time()
+
 
 
 """ Set Path Settings
@@ -17,19 +17,16 @@ Settings: The settings.txt file is a list of detector (FACT) spesific parameters
 stating the geometry of the detector and several physical properties described elsewhere. 
 """
 
-MainDir      = '/home/oline/Documents/CERN/CHub/AEgIS/OnlineTools/LivePlotting/'
-FolderData   = 'Data/'
-PathSettings_txt = '../settings/settings.txt'
-PathSettings_csv = '../settings/settings.csv'
+MainDir           = '/home/oline/Documents/CERN/CHub/AEgIS/OnlineTools/LivePlotting/'
+FolderData        = 'Data/'
+PathSettings  = '../settings/settings'
 
 
-# Convert settings file from txt to csv
-FC = FileConverter(PathSettings_csv, PathSettings_txt)
-FC.Txt2CSV()
+start = time.time()
 
 # Load Data from CSV file into Pandas dataframe 
-param = LoadData(PathSettings_csv)
-param.Initiate() 
+param = LoadData(PathSettings)
+ 
 
 # --------------------------------------------------------------------------------------------------------------
 
@@ -41,8 +38,8 @@ Output: Dataframe df containing the vertex information [z_position, z_weight]
 
 """
 RA = RunAnalysis(param, MainDir, FolderData)
-df = RA.RunSingleFileAnalysis('169627_11.txt')
-#df_z = RA.RunMultiFileAnalysis()
+df = RA.RunSingleFileAnalysis('172011_26.txt')
+#df = RA.RunMultiFileAnalysis()
 
 # --------------------------------------------------------------------------------------------------------------
 """ What information to plot
