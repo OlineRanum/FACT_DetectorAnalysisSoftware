@@ -1,6 +1,7 @@
 """ DOC. 
-The main.py file initiates and runs all sub-system mechanics for buillds, setup, analysis & Visulaizations.
+The main.py file initiates and runs all sub-system mechanics for builds, setup, analysis & visulaizations.
 """
+
 from src_VisualisationTools.plot import plot
 from src_BuildSystem.LoadData import LoadData
 from src_BuildSystem.FileConverter import FileConverter
@@ -49,8 +50,8 @@ df = RA.RunSingleFileAnalysis('172011_26.txt')
 """ Plotting commands
 P.hist(df): plots the z_position, z_weight histogram
 """
-#P = plot(None, param, None)
-#P.hist(df)
+P = plot(None, param, None)
+P.hist(df)
 
 # --------------------------------------------------------------------------------------------------------------
 

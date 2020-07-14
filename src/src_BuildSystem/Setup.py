@@ -1,28 +1,19 @@
-""" 
-Main Function:: Select and restrict data, build ActivationMatrix
+""" Functionality
+Select and restrict data, build ActivationMatrix
 
-Constructor input:          
-    data:  Single runfile (runnumber.txt)
-    param: List of specified parameters from class LoadData
-
-Output:
+Output: 
     self.MainData:  Processed dataframe with col = ['N', 't', 'tot']
-                Removed all excessive information, centering around the rising edge and the 2 microseconds to follow               
+                    Removed all excessive information, centering around the rising edge and the 2 microseconds to follow               
 
 -------------------------------------------------------
-Functions::
-
-    Initiate():                    Run basic analysis functions
-
-    FindRisingEdge():              Finds the rising edge of activated fibers, indicating the arrival of positronium
-
+Functions:: Initiate(), FindRisingEdge():             
     CropData():                    Restrict data to range given by rising edge and positronium decay time
 
     ConstructActivationMatrix():   Builds matrix for animation of activated fibers
                                    The Activation Matrix is a binary 2D matrix of N_fibers X Time, that is zero if a fiber is off
                                    and one if the fiber is activated.
 
-    ResetTime():                   Resets the time to 0, given an index param.edge_buffer before the rising edge
+    ResetTime():                   Resets the time axis to 0, given an index param.edge_buffer before the rising edge
 
 NB!: Multiple functions has input variables are usually determined by param, 
      but has the option as input to make compatible for current unit testing.
@@ -59,8 +50,6 @@ class Setup():
         NB!: The idea behind this function is to be easily integrated with a GUI at a later time,
         more functions like this may be built to correspond to functionalities in the GUI.                
         
-        Parameters:  
-            Is Instance
         Return: 
             Processed dataframe  
         """
@@ -82,13 +71,15 @@ class Setup():
 
     def FindRisingEdge(self, df, t_resolution, edge_lim, edge_buffer):
         """ Functionality:
-        Finds the point where the number of active fibers > edge_lim
+        Finds the rising edge of activated fibers, indicating the arrival of positronium 
+        where the point where the number of active fibers > edge_lim
         
         Parameters:                      
-            df:                 main dataframe
+            df:                 MainDataframe
             t_resolution:       temporal resolution of detector
-            edge_lim:           number of activated fibers to determine incoming particle burst
+            edge_lim:           number of activated fibers to determine incoming particle burst/rising edge
             edge_buffer:        the index of witch to start the current analysis of the data
+
         Return:
             EdgeIndex:          Index where rising edge (N_fibers activated > treshold edge_lim) is found
             Count:              Array containing the number of activated fibers at each time t
@@ -128,13 +119,12 @@ class Setup():
         Build binary 2D N_fibers x Time Activation matrix
 
         Parameters:
-            df: main dataframe
+            df: MainDatafrane
             N_fibers: Number of fibers
-            time_frame: time base
+            time_frame: time axis
             t_resolution: temporal resolution of detector
         Returns:
             ActivationMatrix: 2D N_fibers x Time Activation matrix
-        
         """ 
         # Build appropriatly sized ActivationMatrix and fill with NaN values
         self.ActivationMatrix = np.empty((N_fibers, len(time_frame)))
@@ -153,7 +143,7 @@ class Setup():
 
     def ResetTime(self):
         """ Functionality: 
-        Resets the time of the time base and main dataframe to zero. 
+        Resets the time of the time-axis and MainData to zero. 
         
         Returns:
             Data of relevant timeframe 

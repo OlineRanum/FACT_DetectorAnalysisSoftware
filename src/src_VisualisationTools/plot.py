@@ -59,6 +59,11 @@ class plot():
         z = self.param.CoordinateMatrix[:,2]*self.build.ActivationMatrix[:,0]
         self.line.set_data(z,r)
         anim = animation.FuncAnimation(fig, self.Animate, init_func=self.initAnimation,frames=self.param.frames, interval=self.fsize)
+        """ Moviemaker: (NB VERY Slow)
+        Writer = animation.writers['ffmpeg']
+        writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800)
+        anim.save('im.mp4', writer=writer)
+        """
         plt.show()
 
     def hist(self, df_z):
