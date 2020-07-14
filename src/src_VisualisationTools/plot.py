@@ -63,4 +63,11 @@ class plot():
 
     def hist(self, df_z):
         plt.hist(df_z.z_pos, weights=df_z.z_weight, bins = np.arange(-120,120,2))
+        plt.title('')
+        ax = plt.axes()
+        ax.set_xlabel('z [mm]', fontsize = self.fsize,  labelpad =self.psize)
+        ax.set_ylabel('Count', fontsize = self.fsize, labelpad =self.psize)
+        ax.tick_params(axis='both', which='major', labelsize=self.fsize)
+        ax.tick_params(axis='both', which='minor', labelsize=self.fsize)
+        ax.set_title('FACT Detector Vertex count', fontsize =self.psize, pad = self.tpsize)
         plt.show()
