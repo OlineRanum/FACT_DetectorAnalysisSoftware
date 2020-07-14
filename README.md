@@ -3,7 +3,7 @@
 _Description:_ The package reads the _raw data files_ (see below) coming from the FACT data acusition system, read from a folder 
 
     
-
+TEST
 
 # Installation
 None - you just run it with main.py
