@@ -7,7 +7,7 @@ The package puts out several visualization modules for information stored in the
 _Intention:_ The intention of this package is to provide easy acsess to the FACT data, as it is streamed directly from the detector into the _Data_ directory. 
 This will make it easier to check that everything runs as it should, and to perform easy analysis on top of the data.
 
-_Future Development:_ Future development consists of building a solid graphical user face and a simple installation mechanism for the package. A mechanism to easily add new analysis modules and adjust the detector parameters through settings.txt must come into place. 
+_Future Development:_ Future development consists of building a solid graphical user interface and a simple installation mechanism for the package. A mechanism to easily add new analysis modules and adjust the detector parameters through settings.txt must come into place. 
 
 
 ### Installation
@@ -27,7 +27,18 @@ Run 2 in virtual shell (Not yet avilable from github - TODO: Setup a system for 
     source venv/bin/activate
     python3 src/main.py
     
-   
+#### Unit Testing
+The unit tests can be run through two mechanisms, either by running the test_file 
+
+    $ src/src_UnitTesting/test_SetUp.py
+
+or by running a class directly as a script on the if __name__ == '__main__' mechanics
+
+    $ src/src_SetUp/SetUp.py
+
+##### Consepts on unit tests
+--- blahblahblah
+ 
 
 ### Support 
 Primary developer: Oline Ranum - olinear@uio.no
