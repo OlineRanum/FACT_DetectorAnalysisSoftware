@@ -1,23 +1,16 @@
-""" Functionality
+""" Functionality:
 Select and restrict data, build ActivationMatrix
 
 Output: 
-    self.MainData:  Processed dataframe with col = ['N', 't', 'tot']
-                    Removed all excessive information, centering around the rising edge and the 2 microseconds to follow               
+    self.MainData:  
+    Processed dataframe with col = ['N', 't', 'tot']
+    Removed all excessive information, centering around the rising edge and the t_res*frames microseconds to follow               
 
--------------------------------------------------------
-Functions:: Initiate(), FindRisingEdge():             
-    CropData():                    Restrict data to range given by rising edge and positronium decay time
+Methods: 
+    Initiate(), FindRisingEdge(), CropData(), ConstructActivationMatrix(), ResetTime():                  
 
-    ConstructActivationMatrix():   Builds matrix for animation of activated fibers
-                                   The Activation Matrix is a binary 2D matrix of N_fibers X Time, that is zero if a fiber is off
-                                   and one if the fiber is activated.
-
-    ResetTime():                   Resets the time axis to 0, given an index param.edge_buffer before the rising edge
-
-NB!: Multiple functions has input variables are usually determined by param, 
-     but has the option as input to make compatible for current unit testing.
-        
+NB!: Multiple methods has input variables are usually determined by param, 
+but has the option as input to make compatible for current unit testing.  
 """
 
 import numpy as np
@@ -116,8 +109,9 @@ class Setup():
 
     def ConstructActivationMatrix(self, df, N_fibers, time_frame, t_resolution):
         """  Functionallity: 
-        Build binary 2D N_fibers x Time Activation matrix
-
+        Build binary 2D N_fibers x Time Activation matrix for animation of activated fibers
+        The Activation Matrix elements are zero if a fiber is off and one if the fiber is activated.
+        
         Parameters:
             df: MainDatafrane
             N_fibers: Number of fibers
