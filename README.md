@@ -58,20 +58,19 @@ Primary developer: Oline Ranum - olinear@uio.no
 
 *Main.py*: Performs three tasks. 1) Loads param = Sets detector parameters. 2) Makes a call to the RunAnalysis modules, and sets wheter to perform a single file or a multi file analysis. 3) Makes final call to plotting and visulaization.
 
-*RunAnalysis*: Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided.
+*RunAnalysis*: Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then calls to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided. When RunMultiFileAnalysis is called, a call is made to RunSingleFileAnalysis for each file in the directory. The information is then collected in a single large Dataframe containing the combined list of the verticies from all the individual files. 
 
-## Vertex Analysis 
+### Vertex Analysis 
 The standard analysis packages entails a vertex reconstruction along the z-axis, returning the position of a vertex and the weight of the vertex. 
-The weight of a vertex is defined as 1/(The number of potential particle origins). The combinatorics might yield several solutions for potential vertecies. 
-
+The weight of a vertex is defined as 1/(The number of potential particle origins), as the combinatorics might yield several solutions for potential vertecies within a certain time/space region. 
 
 
 # Main Information Holders
-The Analysis is run with two primary information holders, as the system has two main sources of information. One being the raw data put out by FACT, the other being the external input of physical detector parameters. 
+The analysis is run with two primary information holders, as the system has two main sources of information. One being the raw data put out by FACT, the other being the external input of physical detector parameters. 
 
-    param:
-    
-    MainFile:
+    param:      Param is an instance of the class LoadData holding all the external parameters set in the file settings/settings.txt. Furthermore, the instance                   holds the coordinate mapping providing z and r coordinates of each singular fiber in the property param.CoordinateMatrix. 
+        
+    MainData:   Main data holds the raw data file containing the fiber activation information of fiber number N, activation timestamp t and the time over treshold                 tot. During the SetUp.CombineDatabases() procedure, this main dataframe is expanded to include the r, z positioning of each fiber N. I.e. a                       DataFrame on the column format ['N', 't', 'tot', 'z', 'r'].
 
 
 # Native Information
@@ -87,7 +86,10 @@ The FACT system produces raw datafiles on the format of
     -----
     | 645 | 35| 10  |
 
-These are the basic information which all analysis is based upon, as well as the detector settings. 
+
+N: The unique fiber number yielding the coordinates z, r
+t: The time stamp when a fiber fiers 
+tot: The time the fiber stays activated after a fiber has fiered, proportional to the incoming energy of the fiber
 
 
 # Roadmap
