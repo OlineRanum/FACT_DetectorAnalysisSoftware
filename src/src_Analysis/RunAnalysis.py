@@ -51,14 +51,14 @@ class RunAnalysis():
 
         # Build data setup for file
         build = Setup(data, self.param)
-        data  = build.InitiateStandardBuild() 
+        MainData  = build.InitiateStandardBuild() 
 
         # Analyse file
-        ATB = AnalysisToolBox(data, self.param, build)
+        ATB = AnalysisToolBox(MainData, self.param, build)
         vertecies_onefile = ATB.Initiate_Standard_Analysis()
 
         # Plot Live action activation
-        P = plot(data, self.param, build)
+        P = plot(MainData, self.param, build)
         P.plot_FACT_live()
         
         return vertecies_onefile

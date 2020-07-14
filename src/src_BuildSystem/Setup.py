@@ -6,7 +6,7 @@ Constructor input:
     param: List of specified parameters from class LoadData
 
 Output:
-    self.data:  Processed dataframe with col = ['N', 't', 'tot']
+    self.MainData:  Processed dataframe with col = ['N', 't', 'tot']
                 Removed all excessive information, centering around the rising edge and the 2 microseconds to follow               
 
 -------------------------------------------------------
@@ -35,12 +35,12 @@ import pandas as pd
 class Setup():  
     
 
-    def __init__(self, data, param):
+    def __init__(self, MainData, param):
         self.param = param
-        self.data = data
+        self.MainData = MainData
 
         # Timebase from min and max time in main dataframe, with intervals corresponding to the detectors temporal resolution
-        self.time = np.arange(self.data['t'].loc[np.argmin(self.data['t'])],self.data['t'].loc[np.argmax(self.data['t'])] + self.param.t_res, self.param.t_res)
+        self.time = np.arange(self.MainData['t'].loc[np.argmin(self.MainData['t'])],self.MainData['t'].loc[np.argmax(self.MainData['t'])] + self.param.t_res, self.param.t_res)
         # Array to be filled with the number of activated fibers at eatch time step
         self.count = np.zeros(len(self.time))
 
@@ -65,18 +65,18 @@ class Setup():
             Processed dataframe  
         """
 
-        self.FindRisingEdge(self.data, self.param.t_res, self.param.rising_edge, self.param.edge_buffer)
+        self.FindRisingEdge(self.MainData, self.param.t_res, self.param.rising_edge, self.param.edge_buffer)
         self.CropData()
-        self.ConstructActivationMatrix(self.data, self.param.N_fibers, self.time, self.param.t_res)
+        self.ConstructActivationMatrix(self.MainData, self.param.N_fibers, self.time, self.param.t_res)
         self.ResetTime()
         self.CombineDatabases()
 
-        return self.data
+        return self.MainData
 
     def CombineDatabases(self):
         CoordinateFrame = pd.DataFrame(self.param.CoordinateMatrix, columns = ['N', 'r', 'z'])
         CoordinateFrame['N'] = CoordinateFrame['N'].astype(int)
-        self.data = pd.merge(self.data, CoordinateFrame, on =['N'])
+        self.MainData = pd.merge(self.MainData, CoordinateFrame, on =['N'])
         
 
 
@@ -116,8 +116,8 @@ class Setup():
         
         EndIndex = self.EdgeIndex+int(self.param.frames)
 
-        self.data = self.data[(self.data['t'] >= self.time[self.EdgeIndex]) &\
-            (self.data['t'] <= self.time[EndIndex])].reset_index(drop = True)
+        self.MainData = self.MainData[(self.MainData['t'] >= self.time[self.EdgeIndex]) &\
+            (self.MainData['t'] <= self.time[EndIndex])].reset_index(drop = True)
 
         self.time = self.time[self.EdgeIndex: EndIndex]
         self.count = self.count[self.EdgeIndex: EndIndex]
@@ -159,7 +159,7 @@ class Setup():
             Data of relevant timeframe 
         """
         self.time = self.time - self.time[0]
-        self.data['t'] = self.data['t']-self.data['t'].iloc[0]                  
+        self.MainData['t'] = self.MainData['t']-self.MainData['t'].iloc[0]                  
 
 
 

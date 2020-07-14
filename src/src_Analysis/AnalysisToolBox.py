@@ -10,8 +10,8 @@ class AnalysisToolBox():
     Layer_2 = pd.DataFrame()
 
 
-    def __init__(self, data, param, build):
-        self.data = data
+    def __init__(self, MainData, param, build):
+        self.MainData = MainData
         self.param = param
         self.build = build
 
@@ -52,21 +52,21 @@ class AnalysisToolBox():
                 data_: A dataframe containing only the events occuring after the tail_cut marking
         """
         # Select only tail data
-        self.data_ = self.data[self.data['t'] > tail_cut].reset_index(drop = True)
+        self.MainData_ = self.MainData[self.MainData['t'] > tail_cut].reset_index(drop = True)
         # Make the detector mapping matrix to a mapping dataframe and merge with layer structures
-        self.data = self.data_.join(pd.DataFrame({'key': np.arange(0, len(self.data_), 1)}))
+        self.MainData = self.MainData_.join(pd.DataFrame({'key': np.arange(0, len(self.MainData_), 1)}))
 
         # Make dataframe for lower superlayer
-        self.Layer_1 = self.data[self.data['N'] >= layer_cut].reset_index(drop = True)                                                   
+        self.Layer_1 = self.MainData[self.MainData['N'] >= layer_cut].reset_index(drop = True)                                                   
         # Make dataframe for upper suself,self,self,self,perlayer
-        self.Layer_2 = self.data[self.data['N'] < layer_cut].reset_index(drop = True)         
+        self.Layer_2 = self.MainData[self.MainData['N'] < layer_cut].reset_index(drop = True)         
       
 
-        #P = plot(self.data, self.param, self.build)
+        #P = plot(self.MainData, self.param, self.build)
         #P.scatter(self.Layer_2['z'], self.Layer_2['r'], self.Layer_2['t'])
 
 
-        return self.data_
+        return self.MainData_
 
 
     def FindClusters(self, df, t_resolution, radius):
@@ -183,8 +183,8 @@ class AnalysisToolBox():
             
 
     def __repr__(self):
-        return "AnalysisToolBox:\nCurrent Dataframe: \n'{}'\n'{}'\n".format(self.data, [print(i, ': ', self.param.__dict__[i]) for i in self.param.__dict__])
+        return "AnalysisToolBox:\nCurrent Dataframe: \n'{}'\n'{}'\n".format(self.MainData, [print(i, ': ', self.param.__dict__[i]) for i in self.param.__dict__])
     
     def __str__(self):
-        return "\nCurrent Dataframe: 'n'{}'\n'{}'\n ".format(self.data, [print(i, ': ', self.param.__dict__[i]) for i in self.param.__dict__])
+        return "\nCurrent Dataframe: 'n'{}'\n'{}'\n ".format(self.MainData, [print(i, ': ', self.param.__dict__[i]) for i in self.param.__dict__])
         
