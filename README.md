@@ -65,7 +65,7 @@ The standard analysis packages entails a vertex reconstruction along the z-axis,
 The weight of a vertex is defined as 1/(The number of potential particle origins), as the combinatorics might yield several solutions for potential vertecies within a certain time/space region. 
 
 
-# Main Information Holders
+## Main Information Holders
 The analysis is run with two primary information holders, as the system has two main sources of information. One being the raw data put out by FACT, the other being the external input of physical detector parameters. 
 
 
@@ -73,8 +73,6 @@ The analysis is run with two primary information holders, as the system has two 
         
 2. *MainData:* Main data holds the raw data file containing the fiber activation information of fiber number N, activation timestamp t and the time over treshold tot. During the SetUp.CombineDatabases() procedure, this main dataframe is expanded to include the r, z positioning of each fiber N. I.e. a                       DataFrame on the column format ['N', 't', 'tot', 'z', 'r'].
 
-
-# Native Information
 
 ## Raw Data Files
 The FACT system produces raw datafiles on the format of
@@ -105,6 +103,7 @@ Ideas for future development
     
     
 ## How to start with getting to know the project 
+..............
 
 # Project status
 Early stages of development 
