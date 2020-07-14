@@ -88,13 +88,13 @@ The analysis is run with two primary information holders, as the system has two 
 ## Raw Data Files
 The FACT system produces raw datafiles on the format of
 
-    | N   | t | tot |
-    |-----|---|-----|
-    | 412 | 0 | 5   |
-    | 5   | 5 | 15  |
-    | 200 | 5 | 10  |
-    -----
-    | 645 | 35| 10  |
+| **N**   | **t** | **tot** |
+|-----|---|-----|
+| 412 | 0 | 5   |
+| 5   | 5 | 15  |
+| 200 | 5 | 10  |
+...
+| 645 | 35| 10  |
 
 
 N: The unique fiber number yielding the coordinates z, r
@@ -108,9 +108,9 @@ Ideas for future development
 # Authors and acknowledgment
 
 ## Contributors 
-    | Name   | Contact |
-    |-----|---|
-    | Oline A. Ranum | olinear@uio.no | 
+| **Name**   | **Contact** |
+|-----|---|
+| Oline A. Ranum | olinear@uio.no | 
     
     
 ## How to start with getting to know the project 
