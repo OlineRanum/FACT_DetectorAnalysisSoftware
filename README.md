@@ -1,6 +1,6 @@
 # Online tool for Live Plotting of FACT Data
 
-_Description:_ The package reads the _raw data files_ (see below) coming from the FACT data acusition system. 
+_Description:_ The package reads the _raw data files_ (see below) coming from the FACT data acusition system, read from a folder 
 
     
 
