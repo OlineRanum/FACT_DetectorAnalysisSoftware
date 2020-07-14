@@ -46,8 +46,8 @@ df = RA.RunSingleFileAnalysis('172011_26.txt')
 
 P.hist(df): plots the z_position, z_weight histogram
 """
-P = plot(None, param, None)
-P.hist(df)
+#P = plot(None, param, None)
+#P.hist(df)
 
 
 

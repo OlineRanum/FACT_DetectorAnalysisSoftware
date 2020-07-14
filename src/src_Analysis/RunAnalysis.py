@@ -17,12 +17,6 @@ class RunAnalysis():
         self.path = path
         self.folder = folder
 
-        self.ReadFiles = ReadFiles
-        self.Setup = Setup
-        self.plot = plot
-
-        self.vertices = pd.DataFrame()
-
 
     def RunMultiFileAnalysis(self):
         """ Functionality:
@@ -34,16 +28,15 @@ class RunAnalysis():
                 z_pos: The position of all the extrapolated annihilation vertecies on the central z-axis
                 z_weight: The weight, or count number, of the z_pos vertecies
         """
-        # Empty df for filling with z_pos, z_weight information
 
-        self.vertices = pd.DataFrame(columns = ['z_pos', 'z_weight'])
+        # Empty df for filling with z_pos, z_weight information
+        verticies = pd.DataFrame(columns = ['z_pos', 'z_weight'])
 
         # Itterate through all files in directory
         for filename in os.listdir(self.path + self.folder):
-            df = self.RunSingleFileAnalysis(filename)
-            self.vertices = self.vertices.append(df)
+            verticies = verticies.append(self.RunSingleFileAnalysis(filename))
 
-        return self.vertices.reset_index(drop = True)
+        return verticies.reset_index(drop = True)
     
     def RunSingleFileAnalysis(self, Filename):
         """ 
@@ -53,7 +46,7 @@ class RunAnalysis():
             The z_pos, z_weight combinations from the singular files
         """
         # Read single file
-        RF = self.ReadFiles(self.path, self.folder, Filename)
+        RF = ReadFiles(self.path, self.folder, Filename)
         data = RF.GetCSV()
 
         # Build data setup for file
@@ -62,10 +55,10 @@ class RunAnalysis():
 
         # Analyse file
         ATB = AnalysisToolBox(data, self.param, build)
-        df_z = ATB.Initiate_Standard_Analysis()
+        vertecies_onefile = ATB.Initiate_Standard_Analysis()
 
         # Plot Live action activation
-        #P = self.plot(data, self.param, build)
-        #P.plot_FACT_live()
+        P = plot(data, self.param, build)
+        P.plot_FACT_live()
         
-        return df_z
+        return vertecies_onefile

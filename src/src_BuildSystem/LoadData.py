@@ -71,15 +71,7 @@ class LoadData():
         # Map structure
         self.CoordinateMatrix = np.empty((0,0))                                     # An empty matrix of where to store the coordinate system connecting the fiber number, z and r position [N, r, z]
         self.SetCoordinates()
-
-    def Initiate(self):
-        """ Functionality:
-        Run automatic construction of detector environment
         
-        Functions:
-            SetCoordinates(): Builds the detector mapping
-        """
-        self.SetCoordinates()
 
     def SetCoordinates(self):
         """ Functionality:

@@ -32,7 +32,8 @@ NB!: Multiple functions has input variables are usually determined by param,
 import numpy as np
 import pandas as pd
 
-class Setup():
+class Setup():  
+    
 
     def __init__(self, data, param):
         self.param = param
@@ -42,13 +43,14 @@ class Setup():
         self.time = np.arange(self.data['t'].loc[np.argmin(self.data['t'])],self.data['t'].loc[np.argmax(self.data['t'])] + self.param.t_res, self.param.t_res)
         # Array to be filled with the number of activated fibers at eatch time step
         self.count = np.zeros(len(self.time))
+
         # The minimum time of the main dataframe
         self.t0 = 0
         # The Index of which the number of activated fibers is above param.edge
         self.EdgeIndex = 0
         # 2D array to be filled by N fibers x time binary values, one indicating that the fiber is active and zero that it is inactive
         # Each row in the array corresponds to a spesific fiber
-        self.ActivationMatrix = np.empty((0,0))    
+        self.ActivationMatrix = np.empty((0,0))  
 
 
     def InitiateStandardBuild(self):                                        
@@ -96,9 +98,9 @@ class Setup():
         tot = np.array(df['tot'],  dtype = int)//t_resolution
         
         # Count number of activated fibers at eatch time t, given from main dataframe
-        for i in range(len(df['N'])):
+        for i in range(len(df)):
             self.count[t[i]: t[i]+ tot[i]] += 1
-        
+
         # Find index where count > param.rising_edge and give buffer = param.edge_buffer
         self.EdgeIndex = int(np.argmax(self.count >= edge_lim)-edge_buffer)
 
@@ -111,15 +113,15 @@ class Setup():
         Returns:
             Cropped main dataframe, timebase and count
         """
-        EndIndex_ = self.EdgeIndex+int(self.param.frames)
-        tmin = self.time[self.EdgeIndex]
-        tmax = self.time[EndIndex_]
+        
+        EndIndex = self.EdgeIndex+int(self.param.frames)
 
-        self.time = self.time[self.EdgeIndex: EndIndex_]
+        self.data = self.data[(self.data['t'] >= self.time[self.EdgeIndex]) &\
+            (self.data['t'] <= self.time[EndIndex])].reset_index(drop = True)
+
+        self.time = self.time[self.EdgeIndex: EndIndex]
+        self.count = self.count[self.EdgeIndex: EndIndex]
         self.t0 = int(self.time[0])
-        self.count = self.count[self.EdgeIndex: EndIndex_]
-        self.data = self.data[(self.data['t'] >= tmin) & (self.data['t'] <= tmax)].reset_index(drop = True)
-
 
     def ConstructActivationMatrix(self, df, N_fibers, time_frame, t_resolution):
         """  Functionallity: 
@@ -139,14 +141,13 @@ class Setup():
         self.ActivationMatrix[:] = np.NaN
     
         N   = np.array(df['N'], dtype = int)
-        t   = np.array(df['t'], dtype = int)
-        tot = np.array(df['tot'],  dtype = int)
-        
-        t0_ = int(time_frame[0])
+        t   = np.array(df['t'], dtype = int)//t_resolution
+        tot = np.array(df['tot'],  dtype = int)//t_resolution
+        t0_ = self.t0//t_resolution
 
         # Count all active fibers
         for i in range(len(N)):
-            self.ActivationMatrix[N[i], (t[i]-t0_)//t_resolution:(t[i]-self.t0+tot[i])//t_resolution] = 1
+            self.ActivationMatrix[N[i], t[i]-t0_:t[i]-t0_+tot[i]] = 1
 
         return self.ActivationMatrix
 
@@ -157,7 +158,9 @@ class Setup():
         Returns:
             Data of relevant timeframe 
         """
-        # Time Base
         self.time = self.time - self.time[0]
-        # Main Data Frame
-        self.data['t'] = self.data['t']-self.data['t'].iloc[0]
+        self.data['t'] = self.data['t']-self.data['t'].iloc[0]                  
+
+
+
+
