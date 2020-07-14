@@ -68,9 +68,10 @@ The weight of a vertex is defined as 1/(The number of potential particle origins
 # Main Information Holders
 The analysis is run with two primary information holders, as the system has two main sources of information. One being the raw data put out by FACT, the other being the external input of physical detector parameters. 
 
-    param:      Param is an instance of the class LoadData holding all the external parameters set in the file settings/settings.txt. Furthermore, the instance                   holds the coordinate mapping providing z and r coordinates of each singular fiber in the property param.CoordinateMatrix. 
+
+1. *param:* Param is an instance of the class LoadData holding all the external parameters set in the file settings/settings.txt. Furthermore, the instance holds the coordinate mapping providing z and r coordinates of each singular fiber in the property param.CoordinateMatrix. 
         
-    MainData:   Main data holds the raw data file containing the fiber activation information of fiber number N, activation timestamp t and the time over treshold                 tot. During the SetUp.CombineDatabases() procedure, this main dataframe is expanded to include the r, z positioning of each fiber N. I.e. a                       DataFrame on the column format ['N', 't', 'tot', 'z', 'r'].
+2. *MainData:* Main data holds the raw data file containing the fiber activation information of fiber number N, activation timestamp t and the time over treshold tot. During the SetUp.CombineDatabases() procedure, this main dataframe is expanded to include the r, z positioning of each fiber N. I.e. a                       DataFrame on the column format ['N', 't', 'tot', 'z', 'r'].
 
 
 # Native Information
