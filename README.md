@@ -10,12 +10,12 @@ This will make it easier to check that everything runs as it should, and to perf
 _Future Development:_ Future development consists of building a solid graphical user face and a simple installation mechanism for the package. A mechanism to easily add new analysis modules and adjust the detector parameters through settings.txt must come into place. 
 
 
-# Installation
+### Installation
 
 The package will in the future be installable and runnable through a GUI, as per early development stages the code is run through the main.py file.
 Exec system to be built
 
-# Usage
+### Usage
 Current usage:
 
 Run 1:
@@ -29,10 +29,12 @@ Run 2 in virtual shell (Not yet avilable from github - TODO: Setup a system for 
     
    
 
-# Support 
+### Support 
 Primary developer: Oline Ranum - olinear@uio.no
 
-# Folder Structure
+# Build of Program
+
+# Main Folder Structure
     
     src:        
         The source code of the program. 
@@ -50,13 +52,26 @@ Primary developer: Oline Ranum - olinear@uio.no
         Must be in place to ensure compatability with local versions and packages. 
 
 
+# Flow
+
+    Run through main.py.
+
+*Main.py*: Performs three tasks. 1) Loads param = Sets detector parameters. 2) Makes a call to the RunAnalysis modules, and sets wheter to perform a single file or a multi file analysis. 3) Makes final call to plotting and visulaization.
+
+*RunAnalysis*: Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided.
+
+## Vertex Analysis 
+The standard analysis packages entails a vertex reconstruction along the z-axis, returning the position of a vertex and the weight of the vertex. 
+The weight of a vertex is defined as 1/(The number of potential particle origins). The combinatorics might yield several solutions for potential vertecies. 
+
 
 
 # Main Data Holders
 
+
     param:
     
-    src
+    s
 
 
 # Native Information
