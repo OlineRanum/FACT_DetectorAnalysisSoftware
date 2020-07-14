@@ -1,17 +1,23 @@
 # Online tool for Live Plotting of FACT Data
 
-_Description:_ The package reads the _raw data files_ (see below) coming from the FACT data acusition system, read from a local dir _Data_.
-The package contains classes for setting up the detector environment, and for running analysis on the data. 
-The output is several visualization tools of the FACT data analysis, as described further below. 
+_Description:_ The package reads the _raw FACT data files_ (see below) coming in from the FACT data acusition system, and is processed from a local dir _/Data/_.
+The package contains classes for setting up the detector environment, and for running analysis over singular or multiple datasets.
+The package puts out several visualization modules for information stored in the FACT data, as describet further below. 
 
-_Intention:_ The intention of this package is to provide easy acsess to the information, as it comes in to the _Data_ directory from the acquisition systems. This will make it easier to check that everything runs as it should, and to perform easy analysis on top of the data.
+_Intention:_ The intention of this package is to provide easy acsess to the FACT data, as it is streamed directly from the detector into the _Data_ directory. 
+This will make it easier to check that everything runs as it should, and to perform easy analysis on top of the data.
+
+_Future Development:_ Future development consists of building a solid graphical user face and a simple installation mechanism for the package. A mechanism to easily add new analysis modules and adjust the detector parameters through settings.txt must come into place. 
 
 
 # Installation
-None - you just run it with main.py
+
+The package will in the future be installable and runnable through a GUI, as per early development stages the code is run through the main.py file.
 Exec system to be built
 
 # Usage
+Current usage:
+
 Run 1:
 
     python3 main.py
@@ -24,7 +30,7 @@ Run 2 in virtual shell (Not yet avilable from github - TODO: Setup a system for 
    
 
 # Support 
-Contact: olinear@uio.no
+Primary developer: Oline Ranum - olinear@uio.no
 
 # Folder Structure
     
@@ -32,14 +38,16 @@ Contact: olinear@uio.no
         The source code of the program. 
         
     settings: 
-        settings.txt : This file contains all physical parameters of the ditector.
-                       Note that the parameters are currently described
+        settings.txt : This file contains all physical parameters of the detector. 
+                       Note that the parameters are currently described in the src_SetUp/LoadData.py class
+                       TODO: Write the stand alone description of the detector parameters.
         
     Data_Example:
         Contains one example file that can be run from /Data/
         
     venv: 
-        Not currently avilable - Solution not yet placed for quickinstall virtualenv
+        Not currently avilable - Solution not yet placed for quickinstall virtualenv.
+        Must be in place to ensure compatability with local versions and packages. 
 
 
 
@@ -83,3 +91,7 @@ Ideas for future development
 # Project status
 Early stages of development 
 Working on building cornerstones of the system 
+
+
+# Future TODOs':
+ -> Build the connection between the detector and the _/Data/_ folder. 
