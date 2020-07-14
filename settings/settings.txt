@@ -17,7 +17,7 @@ inter_fiber_dist_mm 1.2
 frames 500
 layer_offset 0.6
 edge 700
-edge_buffer 100
+edge_buffer 25
 N_fibers 800
 Time_resolution_ns 5
 tail 5
