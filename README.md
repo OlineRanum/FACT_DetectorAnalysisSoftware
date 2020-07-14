@@ -1,18 +1,15 @@
 # Online tool for Live Plotting of FACT Data
 
-_Description:_ The package reads the _raw FACT data files_ (see below) coming in from the FACT data acusition system, and is processed from a local dir _/Data/_.
-The package contains classes for setting up the detector environment, and for running analysis over singular or multiple datasets.
-The package puts out several visualization modules for information stored in the FACT data, as describet further below. 
+_Description:_ The package reads the raw FACT data files (see below) coming in from the FACT data acquisition system, and is processed from a local dir /Data/. The package contains classes for setting up the detector environment, and for running analysis over singular or multiple datasets. The package puts out several visualization modules for information stored in the FACT data, as described in greater detail below.
 
-_Intention:_ The intention of this package is to provide easy acsess to the FACT data, as it is streamed directly from the detector into the _Data_ directory. 
-This will make it easier to check that everything runs as it should, and to perform easy analysis on top of the data.
+_Intention:_ This package intends to provide easy access to the FACT data, as it is streamed directly from the detector into the Data directory. This will make it easier to check that everything runs as it should, and to perform easy analysis on top of the data.
 
-_Future Development:_ Future development consists of building a solid graphical user interface and a simple installation mechanism for the package. A mechanism to easily add new analysis modules and adjust the detector parameters through settings.txt must come into place. 
-
+_Future Development:_ Future development consists of building a solid graphical user interface and a simple installation mechanism for the package. A mechanism to easily add new analysis modules and adjust the detector parameters through settings.txt must come into place.
 
 ### Installation
 
 The package will in the future be installable and runnable through a GUI, as per early development stages the code is run through the main.py file.
+
 Exec system to be built
 
 ### Usage
@@ -67,22 +64,22 @@ Primary developer: Oline Ranum - olinear@uio.no
 
     Run through main.py.
 
-*Main.py*: Performs three tasks. 1) Loads param = Sets detector parameters. 2) Makes a call to the RunAnalysis modules, and sets wheter to perform a single file or a multi file analysis. 3) Makes final call to plotting and visulaization.
+*Main.py*: Performs three tasks. 1) Loads param = Sets detector parameters. 2) Makes a call to the RunAnalysis modules, and sets whether to perform a single file or a multi-file analysis. 3) Makes final call to plotting and visualization.
 
-*RunAnalysis*: Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then calls to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided. When RunMultiFileAnalysis is called, a call is made to RunSingleFileAnalysis for each file in the directory. The information is then collected in a single large Dataframe containing the combined list of the verticies from all the individual files. 
+*RunAnalysis*: Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then calls to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided. When RunMultiFileAnalysis is called, a call is made to RunSingleFileAnalysis for each file in the directory. The information is then collected in a single large Dataframe containing the combined list of the vertices from all the individual files. 
 
 ### Vertex Analysis 
-The standard analysis packages entails a vertex reconstruction along the z-axis, returning the position of a vertex and the weight of the vertex. 
-The weight of a vertex is defined as 1/(The number of potential particle origins), as the combinatorics might yield several solutions for potential vertecies within a certain time/space region. 
+The standard analysis packages entail a vertex reconstruction along the z-axis, returning the position of a vertex and the weight of the vertex. 
+The weight of a vertex is defined as 1/(The number of potential particle origins), as the combinatorics might yield several solutions for potential vertices within a certain time/space region. 
 
 
 ## Main Information Holders
-The analysis is run with two primary information holders, as the system has two main sources of information. One being the raw data put out by FACT, the other being the external input of physical detector parameters. 
+The analysis is run with two primary information holders, as the system has two main sources of information. One is the raw data put out by FACT, the other being the external input of physical detector parameters. 
 
 
 1. *param:* Param is an instance of the class LoadData holding all the external parameters set in the file settings/settings.txt. Furthermore, the instance holds the coordinate mapping providing z and r coordinates of each singular fiber in the property param.CoordinateMatrix. 
         
-2. *MainData:* Main data holds the raw data file containing the fiber activation information of fiber number N, activation timestamp t and the time over treshold tot. During the SetUp.CombineDatabases() procedure, this main dataframe is expanded to include the r, z positioning of each fiber N. I.e. a                       DataFrame on the column format ['N', 't', 'tot', 'z', 'r'].
+2. *MainData:* Main data holds the raw data file containing the fiber activation information of fiber number N, activation timestamp t, and the time over threshold tot. During the SetUp.CombineDatabases() procedure, this main dataframe is expanded to include the r, z positioning of each fiber N. I.e. a DataFrame on the column format ['N', 't', 'tot', 'z', 'r'].
 
 
 ## Raw Data Files
