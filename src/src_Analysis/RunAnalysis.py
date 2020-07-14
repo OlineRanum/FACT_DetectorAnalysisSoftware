@@ -20,7 +20,7 @@ class RunAnalysis():
 
     def RunMultiFileAnalysis(self):
         """ Functionality:
-        Running itteratively the multiple files located in pathf + folder = data directory,
+        Running itteratively the multiple files located in path + folder = data directory,
         using RunSingleFieldAnalysis
         
         Returns:
