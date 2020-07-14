@@ -34,7 +34,7 @@ Primary developer: Oline Ranum - olinear@uio.no
 
 # Build of Program
 
-# Main Folder Structure
+## Main Folder Structure
     
     src:        
         The source code of the program. 
@@ -66,12 +66,12 @@ The weight of a vertex is defined as 1/(The number of potential particle origins
 
 
 
-# Main Data Holders
-
+# Main Information Holders
+The Analysis is run with two primary information holders, as the system has two main sources of information. One being the raw data put out by FACT, the other being the external input of physical detector parameters. 
 
     param:
     
-    s
+    MainFile:
 
 
 # Native Information
