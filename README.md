@@ -11,9 +11,11 @@ Exec system to be built
 
 # Usage
 Run 1:
+
     python3 main.py
 
 Run 2 in virtual shell (Not yet avilable from github - TODO: Setup a system for installing the virtual environment + packages):
+
     source venv/bin/activate
     python3 src/main.py
     
