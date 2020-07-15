@@ -17,10 +17,10 @@ inter_fiber_dist_mm 1.2
 frames 500
 layer_offset 0.6
 edge 700
-edge_buffer 25
 N_fibers 800
 Time_resolution_ns 5
 tail 5
-tail_time 1000
+tail_time 1100
 max_travel_time 10
 Track_radius 1.6
+pion_travel_time 0.1
