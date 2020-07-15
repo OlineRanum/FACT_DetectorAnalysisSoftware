@@ -1,4 +1,5 @@
 from src_VisualisationTools.plot import plot
+from src_Analysis.VertexReconstructor import VertexReconstructor
 
 import numpy as np 
 import pandas as pd 
@@ -35,7 +36,8 @@ class BuildEvents():
         cluster_L2 = self.FindClusters(self.Layer_2, self.param.t_res, self.param.Track_radius)
 
         # Track all paths between clusters in layer 1 and clusters in layer 2
-        df_z = self.TrackPath(cluster_L1, cluster_L2)
+        construct = VertexReconstructor(cluster_L1, cluster_L2, self.param)
+        df_z = construct.TrackPath()
         return df_z
 
 
@@ -79,7 +81,7 @@ class BuildEvents():
                 Clusters: The binning of two or more neighboring fibers being simultaneously activated 
 
                 Cluster Filters for fiber i and j in one super layer: 
-                    1) t(i) - t(j) <= 5 ns
+                    1) t(i) - t(j) <= 5 ns   - Whitin two neighboring timebins
                     2) z(i) - z(j) = 1.2 mm
                     3) Has not been assumed part of another cluster
 
@@ -91,7 +93,8 @@ class BuildEvents():
         # Itterate through entire dataframe to find clusters in one given superlayer
         for i in range(len(df)):
             # Select data within the restrictions of filter 1,2 and 3
-            df_temp = df[(abs(df['t']-df['t'].iloc[i]) <= t_resolution) &\
+            df_temp = df[(df['t']-df['t'].iloc[i] >= 0) &\
+                (abs(df['t']-df['t'].iloc[i]) <= t_resolution) &\
                 (abs(df['z']-df['z'].iloc[i]) <= radius) & (~df.key.isin(keys))]
             print(df_temp)
             print('----------------------------------------------')
@@ -120,67 +123,6 @@ class BuildEvents():
                 df_verticies = df_verticies.drop([i+1]).reset_index(drop = True)                  # Drop the latter of the two events from the dataframe and reset index
 
         return df_verticies
-
-
-    def TrackPath(self, df1, df2):
-        """ 
-        Assumptions:
-        df1 = L1 = The layer with the smallest radius
-        
-        - we only concider the paths going from layer 1 to layer 2
-
-        """
-
-        z_pos, z_weight = [], []
-        # Itterate over cluster database
-        for i in range(len(df1)):
-            potential_vertecies = np.where((df2['t'].values >= df1['t'].loc[i]) & (df2['t'].values <= df1['t'].loc[i] + self.param.max_travel_time))[0]
-            zp, zw = self.Z_distribution(df1, df2, i, potential_vertecies)
-            if zp:
-                for j in range(len(zp)):
-                    z_pos.append(zp[j])
-                    z_weight.append(zw[j])
-        df_z = pd.DataFrame({'z_pos': z_pos, 'z_weight': z_weight})
-        df_z = df_z.sort_values(by = 'z_pos')
-        return df_z
-        
-
-
-    def Z_distribution(self, df1, df2, i, potential_vertecies):
-        z_vals, z_weight = [], []
-        r1 = df1['r'].loc[i]
-        z1 = df1['z'].loc[i]
-        tossed = 0
-        for j in potential_vertecies:
-            r2 = df2['r'].loc[j]
-            z2 = df2['z'].loc[j]
-            if z1 != z2:
-                z_pos = self.FindOriginZ_extrapolate(r1, r2, z1, z2)
-            else: 
-                z_pos = z2
-            if (z_pos < self.param.last_fiber_position) and (z_pos >-self.param.last_fiber_position):
-                z_vals.append(z_pos)
-            else: 
-                tossed  += 1
-
-        if potential_vertecies.size != tossed:
-            z_weight = np.ones(len(z_vals))/(potential_vertecies.size - tossed)
-
-        return z_vals, z_weight
-
-    @staticmethod
-    def FindOriginZ(r1,r2,z1,z2):
-        """ z_pos = z2 - dz/dr*r2 = z2 - than(theta)*r2
-        """
-        return z2 - (z2-z1)/(r2-r1)*r2
-
-
-    @staticmethod
-    def FindOriginZ_extrapolate(r1,r2,z1,z2):
-        """ Using that f(x) = a*x + b
-        """
-        a = (r2-r1)/(z2-z1)
-        return -(r1 - a*z1)/a
             
 
     def __repr__(self):

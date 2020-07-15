@@ -4,7 +4,6 @@ The main.py file initiates and runs all sub-system mechanics for builds, setup, 
 
 from src_VisualisationTools.plot import plot
 from src_BuildSystem.LoadData import LoadData
-from src_BuildSystem.FileConverter import FileConverter
 from src_Analysis.RunAnalysis import RunAnalysis
 
 import time

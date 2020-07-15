@@ -54,8 +54,8 @@ class RunAnalysis():
         MainData  = build.InitiateStandardBuild() 
 
         # Analyse file
-        ATB = AnalysisToolBox(MainData, self.param, build)
-        vertecies_onefile = ATB.Initiate_Standard_Analysis()
+        events = BuildEvents(MainData, self.param, build)
+        vertecies_onefile = events.Initiate_Standard_Analysis()
 
         # Plot Live action activation
         #P = plot(MainData, self.param, build)
