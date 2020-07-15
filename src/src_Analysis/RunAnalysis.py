@@ -1,6 +1,6 @@
 from src_BuildSystem.ReadFiles import ReadFiles
 from src_BuildSystem.Setup import Setup
-from src_Analysis.AnalysisToolBox import AnalysisToolBox
+from src_Analysis.BuildEvents import BuildEvents
 from src_VisualisationTools.plot import plot
 import sys
 
@@ -58,7 +58,7 @@ class RunAnalysis():
         vertecies_onefile = ATB.Initiate_Standard_Analysis()
 
         # Plot Live action activation
-        P = plot(MainData, self.param, build)
-        P.plot_FACT_live()
+        #P = plot(MainData, self.param, build)
+        #P.plot_FACT_live()
         
         return vertecies_onefile
