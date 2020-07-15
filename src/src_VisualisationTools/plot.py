@@ -34,14 +34,14 @@ class plot():
         pass
 
     def initAnimation(self):
-        r = self.param.CoordinateMatrix[:,1]*self.build.ActivationMatrix[:,0]
-        z = self.param.CoordinateMatrix[:,2]*self.build.ActivationMatrix[:,0]
+        r = self.param.FiberMapper[:,1]*self.build.ActivationMatrix[:,0]
+        z = self.param.FiberMapper[:,2]*self.build.ActivationMatrix[:,0]
         self.line.set_data(z,r)
         return self.line
 
     def Animate(self, i):
-        r = self.param.CoordinateMatrix[:,1]*self.build.ActivationMatrix[:,i]
-        z = self.param.CoordinateMatrix[:,2]*self.build.ActivationMatrix[:,i]
+        r = self.param.FiberMapper[:,1]*self.build.ActivationMatrix[:,i]
+        z = self.param.FiberMapper[:,2]*self.build.ActivationMatrix[:,i]
         self.line.set_data(z,r)
         return self.line
 
@@ -55,8 +55,8 @@ class plot():
         ax.tick_params(axis='both', which='minor', labelsize=self.fsize)
         ax.set_title('FACT Detector', fontsize =self.psize, pad = self.tpsize)
         self.line, = ax.plot([], [], '-ro', lw = 2)
-        r = self.param.CoordinateMatrix[:,1]*self.build.ActivationMatrix[:,0]
-        z = self.param.CoordinateMatrix[:,2]*self.build.ActivationMatrix[:,0]
+        r = self.param.FiberMapper[:,1]*self.build.ActivationMatrix[:,0]
+        z = self.param.FiberMapper[:,2]*self.build.ActivationMatrix[:,0]
         self.line.set_data(z,r)
         anim = animation.FuncAnimation(fig, self.Animate, init_func=self.initAnimation,frames=self.param.frames, interval=self.fsize)
         """ Moviemaker: (NB VERY Slow)
@@ -67,12 +67,14 @@ class plot():
         plt.show()
 
     def hist(self, df_z):
-        plt.hist(df_z.z_pos, weights=df_z.z_weight, bins = np.arange(-120,120,2))
+        plt.close()
+        ax1 = plt.axes()
+        ax1.hist(df_z.z_pos, weights=df_z.z_weight, bins = np.arange(-120,120,2))
         plt.title('')
-        ax = plt.axes()
-        ax.set_xlabel('z [mm]', fontsize = self.fsize,  labelpad =self.psize)
-        ax.set_ylabel('Count', fontsize = self.fsize, labelpad =self.psize)
-        ax.tick_params(axis='both', which='major', labelsize=self.fsize)
-        ax.tick_params(axis='both', which='minor', labelsize=self.fsize)
-        ax.set_title('FACT Detector Vertex count', fontsize =self.psize, pad = self.tpsize)
+        
+        ax1.set_xlabel('z [mm]', fontsize = self.fsize,  labelpad =self.psize)
+        ax1.set_ylabel('Count', fontsize = self.fsize, labelpad =self.psize)
+        ax1.tick_params(axis='both', which='major', labelsize=self.fsize)
+        ax1.tick_params(axis='both', which='minor', labelsize=self.fsize)
+        ax1.set_title('FACT Detector Vertex count', fontsize =self.psize, pad = self.tpsize)
         plt.show()
