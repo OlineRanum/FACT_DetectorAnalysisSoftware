@@ -69,7 +69,7 @@ class LoadData():
         self.Track_radius = self.geometry['Track_radius'][0]                        # [mm] The radius around the central axis of a singular fiber of where to look for cluster-effects
  
         # Map structure
-        self.CoordinateMatrix = np.empty((0,0))                                     # An empty matrix of where to store the coordinate system connecting the fiber number, z and r position [N, r, z]
+        self.FiberMapper = np.empty((0,0))                                     # An empty matrix of where to store the coordinate system connecting the fiber number, z and r position [N, r, z]
         self.SetCoordinates()
         
 
@@ -81,22 +81,22 @@ class LoadData():
             Full Coordinate Mapping Matrix
         """
         # Prepare Matrix
-        self.CoordinateMatrix = np.empty((self.N_fibers, 3))
-        self.CoordinateMatrix[:,0] =  np.arange(0,self.N_fibers,1)
-        self.CoordinateMatrix[:,1:] = np.NaN
+        self.FiberMapper = np.empty((self.N_fibers, 3))
+        self.FiberMapper[:,0] =  np.arange(0,self.N_fibers,1)
+        self.FiberMapper[:,1:] = np.NaN
 
         # Fill Matrix
-        self.CoordinateMatrix[self.L1_min:self.L1_max+1,1] = self.r1
-        self.CoordinateMatrix[self.L1_min:self.L1_max+1,2] = self.CoordinateMatrix[self.L1_min:self.L1_max + 1,0]*self.inter_fiber_dist+ self.layer_offset - self.last_fiber_position
+        self.FiberMapper[self.L1_min:self.L1_max+1,1] = self.r1
+        self.FiberMapper[self.L1_min:self.L1_max+1,2] = self.FiberMapper[self.L1_min:self.L1_max + 1,0]*self.inter_fiber_dist+ self.layer_offset - self.last_fiber_position
 
-        self.CoordinateMatrix[self.L2_min:self.L2_max+1,1] = self.r2
-        self.CoordinateMatrix[self.L2_min:self.L2_max+1,2] = self.CoordinateMatrix[self.L1_min:self.L1_max + 2,0]*self.inter_fiber_dist - self.last_fiber_position
+        self.FiberMapper[self.L2_min:self.L2_max+1,1] = self.r2
+        self.FiberMapper[self.L2_min:self.L2_max+1,2] = self.FiberMapper[self.L1_min:self.L1_max + 2,0]*self.inter_fiber_dist - self.last_fiber_position
 
-        self.CoordinateMatrix[self.L3_min:self.L3_max+1,1] = self.r3
-        self.CoordinateMatrix[self.L3_min:self.L3_max+1,2] = self.CoordinateMatrix[self.L1_min:self.L1_max + 1,0]*self.inter_fiber_dist+self.layer_offset - self.last_fiber_position
+        self.FiberMapper[self.L3_min:self.L3_max+1,1] = self.r3
+        self.FiberMapper[self.L3_min:self.L3_max+1,2] = self.FiberMapper[self.L1_min:self.L1_max + 1,0]*self.inter_fiber_dist+self.layer_offset - self.last_fiber_position
 
-        self.CoordinateMatrix[self.L4_min:self.L4_max+1,1] = self.r4
-        self.CoordinateMatrix[self.L4_min:self.L4_max+1,2] = self.CoordinateMatrix[self.L1_min:self.L1_max + 2,0]*self.inter_fiber_dist - self.last_fiber_position
+        self.FiberMapper[self.L4_min:self.L4_max+1,1] = self.r4
+        self.FiberMapper[self.L4_min:self.L4_max+1,2] = self.FiberMapper[self.L1_min:self.L1_max + 2,0]*self.inter_fiber_dist - self.last_fiber_position
         
 
 

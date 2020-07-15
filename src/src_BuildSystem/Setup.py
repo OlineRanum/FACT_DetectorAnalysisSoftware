@@ -56,7 +56,7 @@ class Setup():
         return self.MainData
 
     def CombineDatabases(self):
-        CoordinateFrame = pd.DataFrame(self.param.CoordinateMatrix, columns = ['N', 'r', 'z'])
+        CoordinateFrame = pd.DataFrame(self.param.FiberMapper, columns = ['N', 'r', 'z'])
         CoordinateFrame['N'] = CoordinateFrame['N'].astype(int)
         self.MainData = pd.merge(self.MainData, CoordinateFrame, on =['N'])
         
