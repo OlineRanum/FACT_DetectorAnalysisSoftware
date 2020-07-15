@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd 
 
 
-class AnalysisToolBox():
+class BuildEvents():
     #Define superlayer 1 and 2
     Layer_1 = pd.DataFrame()
     Layer_2 = pd.DataFrame()
@@ -28,7 +28,7 @@ class AnalysisToolBox():
                 Processed dataframe  
         """
         # Find data region to conider as the tail region of the data set
-        self.GetTailData(self.param.tail_time,self.param.CoordinateMatrix, self.param.L3_min)
+        self.GetTailData(self.param.tail_time,self.param.FiberMapper, self.param.L3_min)
 
         # Find all clusters in layer 1 and 2
         cluster_L1 = self.FindClusters(self.Layer_1,self.param.t_res, self.param.Track_radius)
@@ -39,13 +39,13 @@ class AnalysisToolBox():
         return df_z
 
 
-    def GetTailData(self, tail_cut, CoordinateMatrix_, layer_cut):
+    def GetTailData(self, tail_cut, FiberMapper_, layer_cut):
         """ Functionalities:
             Find and set the fraction of the data corresponding to the tail of the activation curve
 
             Parameters:
                 tail_cut: the time set of where to begin the evaluation of the tail region
-                CoordinateMatrix_: The detector mapping matrix
+                FiberMapper_: The detector mapping matrix
                 layer_cut: The index N seperating the fibers in the lower super layer from the ones in the upper superlayer
 
             Returns:
@@ -93,7 +93,8 @@ class AnalysisToolBox():
             # Select data within the restrictions of filter 1,2 and 3
             df_temp = df[(abs(df['t']-df['t'].iloc[i]) <= t_resolution) &\
                 (abs(df['z']-df['z'].iloc[i]) <= radius) & (~df.key.isin(keys))]
-            
+            print(df_temp)
+            print('----------------------------------------------')
             temp_length = len(df_temp['t'])
 
             # If the dataframe is not empty -> Process data
