@@ -3,24 +3,23 @@ import pandas as pd
 
 class VertexReconstructor():
 
-    def __init__(self, Layer_1, Layer_2, param):
-        self.Layer_1 = Layer_1
-        self.Layer_2 = Layer_2
+    def __init__(self, Layer_I, Layer_U, param):
+        self.Layer_I = Layer_I
+        self.Layer_U = Layer_U
         self.param = param
 
     def TrackPath(self):
         """ 
         Assumptions:
-        self.Layer_1 = L1 = The layer with the smallest radius
-        
+        self.Layer_I is the inner layer with the smaller radius
         - we only concider the paths going from layer 1 to layer 2
 
         """
 
         z_pos, z_weight = [], []
         # Itterate over cluster database
-        for i in range(len(self.Layer_1)):
-            potential_vertecies = np.where((self.Layer_2['t'].values >= self.Layer_1['t'].loc[i]) & (self.Layer_2['t'].values <= self.Layer_1['t'].loc[i] + self.param.max_travel_time))[0]
+        for i in range(len(self.Layer_I)):
+            potential_vertecies = np.where((self.Layer_U['t'].values >= self.Layer_I['t'].loc[i]) & (self.Layer_U['t'].values <= self.Layer_I['t'].loc[i] + self.param.max_travel_time))[0]
             zp, zw = self.Z_distribution(i, potential_vertecies)
             if zp:
                 for j in range(len(zp)):
@@ -34,12 +33,12 @@ class VertexReconstructor():
 
     def Z_distribution(self, i, potential_vertecies):
         z_vals, z_weight = [], []
-        r1 = self.Layer_1['r'].loc[i]
-        z1 = self.Layer_1['z'].loc[i]
+        r1 = self.Layer_I['r'].loc[i]
+        z1 = self.Layer_I['z'].loc[i]
         tossed = 0
         for j in potential_vertecies:
-            r2 = self.Layer_2['r'].loc[j]
-            z2 = self.Layer_2['z'].loc[j]
+            r2 = self.Layer_U['r'].loc[j]
+            z2 = self.Layer_U['z'].loc[j]
             if z1 != z2:
                 z_pos = self.FindOriginZ_extrapolate(r1, r2, z1, z2)
             else: 

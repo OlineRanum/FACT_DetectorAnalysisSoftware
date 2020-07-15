@@ -6,9 +6,9 @@ import pandas as pd
 
 
 class BuildEvents():
-    #Define superlayer 1 and 2
-    Layer_1 = pd.DataFrame()
-    Layer_2 = pd.DataFrame()
+    #Define superlayer lower (I) and upper (U)
+    Layer_I = pd.DataFrame()
+    Layer_U = pd.DataFrame()
 
 
     def __init__(self, MainData, param, build):
@@ -29,11 +29,11 @@ class BuildEvents():
                 Processed dataframe  
         """
         # Find data region to conider as the tail region of the data set
-        self.GetTailData(self.param.tail_time,self.param.FiberMapper, self.param.L3_min)
+        self.SetTail(self.param.tail_time,self.param.FiberMapper, self.param.L3_min)
 
         # Find all clusters in layer 1 and 2
-        cluster_L1 = self.FindClusters(self.Layer_1,self.param.t_res, self.param.Track_radius)
-        cluster_L2 = self.FindClusters(self.Layer_2, self.param.t_res, self.param.Track_radius)
+        cluster_L1 = self.FindClusters(self.Layer_I,self.param.t_res, self.param.Track_radius)
+        cluster_L2 = self.FindClusters(self.Layer_U, self.param.t_res, self.param.Track_radius)
 
         # Track all paths between clusters in layer 1 and clusters in layer 2
         construct = VertexReconstructor(cluster_L1, cluster_L2, self.param)
@@ -41,7 +41,7 @@ class BuildEvents():
         return df_z
 
 
-    def GetTailData(self, tail_cut, FiberMapper_, layer_cut):
+    def SetTail(self, tail_cut, FiberMapper_, layer_cut):
         """ Functionalities:
             Find and set the fraction of the data corresponding to the tail of the activation curve
 
@@ -58,15 +58,9 @@ class BuildEvents():
         # Make the detector mapping matrix to a mapping dataframe and merge with layer structures
         self.MainData = self.MainData_.join(pd.DataFrame({'key': np.arange(0, len(self.MainData_), 1)}))
 
-        # Make dataframe for lower superlayer
-        self.Layer_1 = self.MainData[self.MainData['N'] >= layer_cut].reset_index(drop = True)                                                   
-        # Make dataframe for upper suself,self,self,self,perlayer
-        self.Layer_2 = self.MainData[self.MainData['N'] < layer_cut].reset_index(drop = True)         
-      
-
-        #P = plot(self.MainData, self.param, self.build)
-        #P.scatter(self.Layer_2['z'], self.Layer_2['r'], self.Layer_2['t'])
-
+        # Set lower (Layer_I) & upper superlayer (Layer_U)
+        self.Layer_I = self.MainData[self.MainData['N'] >= layer_cut].reset_index(drop = True)                                                   
+        self.Layer_U = self.MainData[self.MainData['N'] < layer_cut].reset_index(drop = True)         
 
         return self.MainData_
 
@@ -96,8 +90,6 @@ class BuildEvents():
             df_temp = df[(df['t']-df['t'].iloc[i] >= 0) &\
                 (abs(df['t']-df['t'].iloc[i]) <= t_resolution) &\
                 (abs(df['z']-df['z'].iloc[i]) <= radius) & (~df.key.isin(keys))]
-            print(df_temp)
-            print('----------------------------------------------')
             temp_length = len(df_temp['t'])
 
             # If the dataframe is not empty -> Process data
@@ -110,18 +102,23 @@ class BuildEvents():
                 keys = np.append(keys,df_temp['key'].values)
 
         df_verticies = pd.DataFrame({'t': t, 'z': z, 'r': r}).sort_values(['t','z']).reset_index(drop = True)
-
+  
+        
         # Recombine cluster gaps
         """ It can happen that a potential cluster is not combined in the itteration process above
         The following loop runs a doubble check to make sure that all clusters are in fact isolated clusters, 
         and performs a combination in the case of two neighboring events.
         """
-        for i in range(len(df_verticies)-1):
+        #print(df_verticies)
+        i  =  0
+        while i < (len(df_verticies)-1):
+           # print(df_verticies['t'].loc[i])
+           # print('-----------------------------')
             if (abs(df_verticies['t'].loc[i] - df_verticies['t'].loc[i+1]) <= t_resolution)\
                 and (abs(df_verticies['z'].loc[i] - df_verticies['z'].loc[i+1]) <= radius):           # If in fact cluster
                 df_verticies.loc[i] = df_verticies[i:i+2].mean()                                  # Take the average of the two neighbooring events and overwrite the first event
                 df_verticies = df_verticies.drop([i+1]).reset_index(drop = True)                  # Drop the latter of the two events from the dataframe and reset index
-
+            i += 1
         return df_verticies
             
 

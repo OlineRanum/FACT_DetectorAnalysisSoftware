@@ -34,7 +34,10 @@ class RunAnalysis():
 
         # Itterate through all files in directory
         for filename in os.listdir(self.path + self.folder):
-            verticies = verticies.append(self.RunSingleFileAnalysis(filename))
+            print(filename)
+            vert = self.RunSingleFileAnalysis(filename)
+            if vert is not None:
+                verticies = verticies.append(vert)
 
         return verticies.reset_index(drop = True)
     
@@ -51,7 +54,9 @@ class RunAnalysis():
 
         # Build data setup for file
         build = Setup(data, self.param)
-        MainData  = build.InitiateStandardBuild() 
+        MainData  = build.InitiateStandardBuild(Filename) 
+        if MainData is None:
+            return None
 
         # Analyse file
         events = BuildEvents(MainData, self.param, build)

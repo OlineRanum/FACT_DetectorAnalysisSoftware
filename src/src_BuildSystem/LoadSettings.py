@@ -17,7 +17,7 @@ import numpy as np
 from src_BuildSystem.FileConverter import FileConverter
 
 
-class LoadData():
+class LoadSettings():
     """ Functionality: 
     Load all data from settings.csv into the dataframe param
     """
@@ -59,7 +59,6 @@ class LoadData():
         # Data Selection parameters
         self.frames = int(self.geometry['frames'][0])                               # [# int] The time frame of the evaluated data, given by a frame index typically of 500
         self.rising_edge = int(self.geometry['edge'][0])                            # [# int] A number of simultaniously activated fibers indicating the incoming porsitronium burst
-        self.edge_buffer = int(self.geometry['edge_buffer'][0])                     # [# int] A index indicating a concideration of additional time before the edge is encountered, set to zero if no buffer is wanted 
         self.tail = int(self.geometry['tail'][0])                                   # [# int] A number of simultaniously activated fibers indicating the region to concider for analysis on the activation curve tail
         self.tail_time = int(self.geometry['tail_time'][0])                         # [ns] A time indicating the region to concider for analysis on the activation curve tail
 
@@ -70,10 +69,10 @@ class LoadData():
  
         # Map structure
         self.FiberMapper = np.empty((0,0))                                     # An empty matrix of where to store the coordinate system connecting the fiber number, z and r position [N, r, z]
-        self.SetCoordinates()
+        self.MapFactFibers()
         
 
-    def SetCoordinates(self):
+    def MapFactFibers(self):
         """ Functionality:
         Set up FACT mapping, Builds a Matrix of size N_fibersX3 to give [N[i], r[i], z[i]]
 
@@ -101,4 +100,4 @@ class LoadData():
 
 
 if __name__ == '__main__':
-    SetCoordinates()
+    MapFactFibers()

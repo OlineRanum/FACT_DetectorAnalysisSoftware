@@ -3,7 +3,7 @@ The main.py file initiates and runs all sub-system mechanics for builds, setup, 
 """
 
 from src_VisualisationTools.plot import plot
-from src_BuildSystem.LoadData import LoadData
+from src_BuildSystem.LoadSettings import LoadSettings
 from src_Analysis.RunAnalysis import RunAnalysis
 
 import time
@@ -11,13 +11,13 @@ import time
 
 
 """ Set Path Settings
-MainDir:            Project Directory
-FolderData:         Folder containing N datafiles for analysis
-PathSettings:       The subdir the file the settings are read from, append tail of 'txt/csv'.
+    MainDir:            Project Directory
+    FolderData:         Folder containing N datafiles for analysis
+    PathSettings:       The subdir the file the settings are read from, append tail of 'txt/csv'.
 
 
-Settings: The settings.txt file is a list of detector (FACT) spesific parameters,
-stating the geometry of the detector and several physical properties described elsewhere. 
+    Settings: The settings.txt file is a list of detector (FACT) spesific parameters,
+    stating the geometry of the detector and several physical properties described elsewhere. 
 """
 
 MainDir           = '/home/oline/Documents/CERN/CHub/AEgIS/OnlineTools/LivePlotting/'
@@ -28,22 +28,22 @@ PathSettings  = '../settings/settings'
 start = time.time()
 
 # Load data from settings-file into Pandas dataframe 
-param = LoadData(PathSettings)
+param = LoadSettings(PathSettings)
  
 
 # --------------------------------------------------------------------------------------------------------------
 
 """ Initiate Standard Analysis:
-Can either run for multiple files simultaniously (RA.RunMultiFileAnalysis) 
-or for single file evaluation (RA.RunSingleFileAnalysis).
+    Can either run for multiple files simultaniously (RA.RunMultiFileAnalysis) 
+    or for single file evaluation (RA.RunSingleFileAnalysis).
 
-Input:  Location of raw datafiles (path = MainDir + FolderData) and detector paramteres param
-Output: Dataframe df containing the vertex information [z_position, z_weight]
-
+    Input:  Location of raw datafiles (path = MainDir + FolderData) and detector paramteres param
+    Output: Dataframe df containing the vertex information [z_position, z_weight]
 """
+
 RA = RunAnalysis(param, MainDir, FolderData)
-df = RA.RunSingleFileAnalysis('172011_26.txt')
-#df = RA.RunMultiFileAnalysis()
+#df = RA.RunSingleFileAnalysis('172011_26.txt')
+df = RA.RunMultiFileAnalysis()
 
 # --------------------------------------------------------------------------------------------------------------
 """ Plotting commands

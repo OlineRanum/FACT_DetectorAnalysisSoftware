@@ -15,6 +15,7 @@ but has the option as input to make compatible for current unit testing.
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 class Setup():  
     
@@ -37,7 +38,7 @@ class Setup():
         self.ActivationMatrix = np.empty((0,0))  
 
 
-    def InitiateStandardBuild(self):                                        
+    def InitiateStandardBuild(self, Filename):                                        
         """ Functionality: 
         Run the BASIC SetUp Functions
         NB!: The idea behind this function is to be easily integrated with a GUI at a later time,
@@ -47,7 +48,10 @@ class Setup():
             Processed dataframe  
         """
 
-        self.FindRisingEdge(self.MainData, self.param.t_res, self.param.rising_edge, self.param.edge_buffer)
+        self.FindRisingEdge(self.MainData, self.param.t_res, self.param.rising_edge)
+        if self.EvaluateFile() is None:
+            return None
+
         self.CropData()
         self.ConstructActivationMatrix(self.MainData, self.param.N_fibers, self.time, self.param.t_res)
         self.ResetTime()
@@ -60,9 +64,15 @@ class Setup():
         CoordinateFrame['N'] = CoordinateFrame['N'].astype(int)
         self.MainData = pd.merge(self.MainData, CoordinateFrame, on =['N'])
         
+    def EvaluateFile(self):
+        if np.max(self.count) < 100:
+            print('Particles never arrived')
+            return None
+        else:
+            return 'Ok File'
 
 
-    def FindRisingEdge(self, df, t_resolution, edge_lim, edge_buffer):
+    def FindRisingEdge(self, df, t_resolution, edge_lim):
         """ Functionality:
         Finds the rising edge of activated fibers, indicating the arrival of positronium 
         where the point where the number of active fibers > edge_lim
@@ -71,7 +81,6 @@ class Setup():
             df:                 MainDataframe
             t_resolution:       temporal resolution of detector
             edge_lim:           number of activated fibers to determine incoming particle burst/rising edge
-            edge_buffer:        the index of witch to start the current analysis of the data
 
         Return:
             EdgeIndex:          Index where rising edge (N_fibers activated > treshold edge_lim) is found
@@ -85,26 +94,26 @@ class Setup():
         for i in range(len(df)):
             self.count[t[i]: t[i]+ tot[i]] += 1
 
-        # Find index where count > param.rising_edge and give buffer = param.edge_buffer
-        self.EdgeIndex = int(np.argmax(self.count >= edge_lim)-edge_buffer)
+        # Find index where count > param.rising_edge
+        self.EdgeIndex = int(np.argmax(self.count >= edge_lim))
 
         return self.EdgeIndex, self.count
 
     def CropData(self):
         """ Functionality:
-        Crop data to only contain data where t > t(rising_edge) - t(edge_buffer) to t < t(N_frames)
+        Crop data to only contain data where t > t(rising_edge) to t < t(N_frames)
         
         Returns:
             Cropped main dataframe, timebase and count
         """
         
         EndIndex = self.EdgeIndex+int(self.param.frames)
-
+        
         self.MainData = self.MainData[(self.MainData['t'] >= self.time[self.EdgeIndex]) &\
             (self.MainData['t'] <= self.time[EndIndex])].reset_index(drop = True)
-
         self.time = self.time[self.EdgeIndex: EndIndex]
         self.count = self.count[self.EdgeIndex: EndIndex]
+
         self.t0 = int(self.time[0])
 
     def ConstructActivationMatrix(self, df, N_fibers, time_frame, t_resolution):
