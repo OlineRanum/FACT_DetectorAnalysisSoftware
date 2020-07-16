@@ -29,8 +29,6 @@ class Setup():
         self.count = np.array(0)
         # The minimum time of the main dataframe
         self.t0 = 0
-        # The Index of which the number of activated fibers is above param.edge
-        self.EdgeIndex = 0 
         # 2D array to be filled by N fibers x time binary values, one indicating that the fiber is active and zero that it is inactive
         # Each row in the array corresponds to a spesific fiber
         self.ActivationMatrix = np.empty((0,0))  
@@ -39,64 +37,80 @@ class Setup():
     def InitiateStandardBuild(self, Filename):                                        
         """ Functionality: 
         Run the BASIC SetUp Functions
+
         NB!: The idea behind this function is to be easily integrated with a GUI at a later time,
-        more functions like this may be built to correspond to functionalities in the GUI.                
+        more functions like this may be built to correspond to functionalities in the GUI.    
+
+        NOTE_: Fix the time-frame dependency of the Activation Matrix buiild,
+        so that the function can be placed anywhere            
         
         Return: 
             Processed dataframe  
         """
 
         # Crop and clean data
-        self.PrepareFactData(self.MainData, self.param.t_res, self.param.rising_edge)
+        self.PrepareFACTData(self.MainData, self.param.t_res, self.param.rising_edge)
 
-        # Build Activation matrix
-        self.ConstructActivationMatrix(self.MainData, self.param.N_fibers, self.time, self.param.t_res)
-        
-        self.time = self.time - self.time[0]
-        self.MainData['t'] = self.MainData['t']-self.MainData['t'].iloc[0]  
+
 
 
         return self.MainData, self.time, self.count
 
-    def PrepareFactData(self, df, t_resolution, edge_lim):
+    def PrepareFACTData(self, df, t_resolution, edge_lim):
+        """ Functionalities:
+        Prepares and crops the FACT data of a single runfile
+        
+        1. Set up time- and count-axis 1D arrays
+        2. counts all the active fibers at all timesteps in 
+        3. Use count-array to locate rising edge - positronium arrival
+        4. Restrict data to apropriate area around edge 
+        5. Build activation matrix (Should be moved out of this module as soon as time dependency is fixxed)
+        6. Set the first hit to be at t = 0
+        7. Combine Root file data with coordinate matrix 
+        """
         t   = np.array(df['t'], dtype = int)//t_resolution
         tot = np.array(df['tot'],  dtype = int)//t_resolution
 
-        # Timebase from min and max time in main dataframe, with intervals corresponding to the detectors temporal resolution
+        # 1. Timebase from min and max time in main dataframe, with intervals corresponding to the detectors temporal resolution
         self.time = np.arange(df['t'].loc[np.argmin(df['t'])],df['t'].loc[np.argmax(df['t'])] + self.param.t_res, self.param.t_res)
-        # Array to be filled with the number of activated fibers at eatch time step
+        # 1. Array to be filled with the number of activated fibers at eatch time step
         self.count = np.zeros(len(self.time))
 
-        
-        # Count number of activated fibers at eatch time t, given from main dataframe
+        # 2. Count number of activated fibers at eatch time t, given from main dataframe
         for i in range(len(df)):
             self.count[t[i]: t[i]+ tot[i]] += 1
 
         # Test that file is in fact a runfile and not a claibration file
-        if self.EvaluateFile() is None:
-            return None
+        if self.EvaluateFile() is None: return None
         
 
-        # Find index where count > param.rising_edge
-        self.EdgeIndex = int(np.argmax(self.count >= edge_lim)) -50
-        EndIndex = self.EdgeIndex+int(self.param.frames) 
+        # 3. Find index where count > param.rising_edge
+        EdgeIndex = int(np.argmax(self.count >= edge_lim)) - self.param.edge_buffer
+        EndIndex = EdgeIndex+int(self.param.frames) 
 
 
-        # Crop Data to zones restricted by EdgeIndex and EndIndex
-        self.MainData = self.MainData[(self.MainData['t'] >= self.time[self.EdgeIndex]) &\
+        # 4. Crop Data to zones restricted by EdgeIndex and EndIndex
+        self.MainData = self.MainData[(self.MainData['t'] >= self.time[EdgeIndex]) &\
             (self.MainData['t'] <= self.time[EndIndex])].reset_index(drop = True)
 
-        self.time = self.time[self.EdgeIndex: EndIndex]
-        self.count = self.count[self.EdgeIndex: EndIndex]
+        self.time = self.time[EdgeIndex: EndIndex]
+        self.count = self.count[EdgeIndex: EndIndex]
 
         self.t0 = int(self.time[0])
 
-        # Reset Time
+        # 5. Build Activation matrix - Must be done before the time reset - FIX THIS 
+        self.ConstructActivationMatrix(self.MainData, self.param.N_fibers, self.time, self.param.t_res)
 
-        # Make Combined Database        
+        # 6. Reset Time
+        self.time = self.time - self.t0
+        self.MainData['t'] = self.MainData['t']-self.MainData['t'].iloc[0]  
+
+        # 7. Make Combined Database        
         CoordinateFrame = pd.DataFrame(self.param.FiberMapper, columns = ['N', 'r', 'z'])
         CoordinateFrame['N'] = CoordinateFrame['N'].astype(int)
         self.MainData = pd.merge(self.MainData, CoordinateFrame, on =['N'])   
+
+        return self.MainData
 
         
     def ConstructActivationMatrix(self, df, N_fibers, time_frame, t_resolution):
