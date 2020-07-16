@@ -3,11 +3,10 @@ Select and restrict data, build ActivationMatrix
 
 Output: 
     self.MainData:  
-    Processed dataframe with col = ['N', 't', 'tot']
-    Removed all excessive information, centering around the rising edge and the t_res*frames microseconds to follow               
+    Processed/cropped/cleaned dataframe with col = ['N', 't', 'tot', 'z', 'r']
+    Removed all excessive information, centering around the rising edge and the t_res*frames microseconds to follow 
 
-Methods: 
-    Initiate(), FindRisingEdge(), CropData(), ConstructActivationMatrix(), ResetTime():                  
+    If DataFrame does not detect a rising edge, the file is currently tossed away as an calibration file                              
 
 NB!: Multiple methods has input variables are usually determined by param, 
 but has the option as input to make compatible for current unit testing.  
@@ -32,7 +31,6 @@ class Setup():
         # 2D array to be filled by N fibers x time binary values, one indicating that the fiber is active and zero that it is inactive
         # Each row in the array corresponds to a spesific fiber
         self.ActivationMatrix = np.empty((0,0))  
-
 
     def InitiateStandardBuild(self, Filename):                                        
         """ Functionality: 
@@ -111,7 +109,12 @@ class Setup():
         self.MainData = pd.merge(self.MainData, CoordinateFrame, on =['N'])   
 
         return self.MainData
-
+    
+    def EvaluateFile(self):
+        if np.max(self.count) < 100:
+            print('FileTypeError: This file is a calibration file, positronium never arrived')
+            return None
+        else: return 'Ok File'
         
     def ConstructActivationMatrix(self, df, N_fibers, time_frame, t_resolution):
         """  Functionallity: 
@@ -142,10 +145,3 @@ class Setup():
             self.ActivationMatrix[N[i], t[i]-t0_:t[i]-t0_+tot[i]] = 1
 
         return self.ActivationMatrix   
-
-    def EvaluateFile(self):
-        if np.max(self.count) < 100:
-            print('FileTypeError: This file is a calibration file, positronium never arrived')
-            return None
-        else:
-            return 'Ok File'
