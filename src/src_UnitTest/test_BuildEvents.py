@@ -5,7 +5,7 @@ import numpy as np
 import sys 
 sys.path.append("/home/oline/Documents/CERN/CHub/AEgIS/OnlineTools/LivePlotting/src/")
 
-from src_Analysis.AnalysisToolBox import AnalysisToolBox 
+from src_Analysis.BuildEvents import BuildEvents
 
 
 
@@ -23,17 +23,21 @@ class TestSetup(unittest.TestCase):
 
     def setUp(self):
         self.vertex_dat = df = pd.DataFrame({'z': [5/3, 14/3, 7/2, 6/4, 14/4, 5, 2], 'r': [ 1/3,1/3, 1, 1/2, 1/2, 1/2,0]})
-        self.raw_dat = pd.read_csv("src_UnitTest/ex1_rawdata.csv")
-        self.ActivationMatrix = pd.read_csv('src_UnitTest/ex1_ActivationMatrix.csv').values
-        self.ATB = AnalysisToolBox(self.raw_dat, None, None)
+        self.raw_dat = pd.read_csv("Example_Data/ex1_rawdata.csv")
+        self.ActivationMatrix = pd.read_csv('Example_Data/ex1_ActivationMatrix.csv').values
+
+        count = np.sum(self.ActivationMatrix, axis = 0)
+        time = np.arange(0, np.max(self.raw_dat['t']), 5)
+        self.ATB = BuildEvents(self.raw_dat, None, None, count, time)
         
-    def test_DefineTailData(self):
+    def test_SetTail(self):
         CoordinateMatrix_ = self.raw_dat[['N', 'r', 'z']].copy()
         
         layer_cut_predefined = 5
         tail_cut_predefined  = 20 
         
-        testing_df = self.ATB.DefineTailData(tail_cut_predefined, CoordinateMatrix_.values, layer_cut_predefined)
+        
+        testing_df = self.ATB.SetTail(tail_cut_predefined, CoordinateMatrix_.values, layer_cut_predefined)
 
         self.assertEqual(CoordinateMatrix_[17:]['N'].values.tolist(), testing_df['N'].values.tolist())
         self.assertEqual(CoordinateMatrix_[17:]['r'].values.tolist(), testing_df['r'].values.tolist())

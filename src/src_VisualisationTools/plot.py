@@ -70,8 +70,7 @@ class plot():
         plt.close()
         ax1 = plt.axes()
         ax1.hist(df_z.z_pos, weights=df_z.z_weight, bins = np.arange(-120,120,2))
-        plt.title('')
-        
+        plt.title('FACT Z-Vertex')
         ax1.set_xlabel('z [mm]', fontsize = self.fsize,  labelpad =self.psize)
         ax1.set_ylabel('Count', fontsize = self.fsize, labelpad =self.psize)
         ax1.tick_params(axis='both', which='major', labelsize=self.fsize)
