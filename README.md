@@ -100,6 +100,10 @@ N: The unique fiber number yielding the coordinates z, r
 t: The time stamp when a fiber fiers 
 tot: The time the fiber stays activated after a fiber has fiered, proportional to the incoming energy of the fiber
 
+# Visualization Output
+![](Images/test_gif.gif)
+
+
 ## Issue/Project Management
 -> GitKraken Boards
 
