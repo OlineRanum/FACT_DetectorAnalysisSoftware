@@ -1,4 +1,4 @@
-
+from src_UnitTest.LoadSettings_testing import LoadSettings_testing
 from numpy.random import seed
 from numpy.random import randint
 import pandas as pd 
@@ -19,7 +19,7 @@ class BuildTestingMaterial():
         Poisonnian distribution simulates the rising edge.
         """
         # Set random seed
-#        seed(self.nr_seed + 3)
+        #        seed(self.nr_seed + 3)
 
         # Build a random raw datafile
         N = randint(0,self.N_fibers, self.N_points)
@@ -67,7 +67,7 @@ class BuildTestingMaterial():
                 test_count[t[i]//5:] += 1
                 break
 
-        return df, TEST_ActivationMatrix, time
+        return df.sort_values(['t']).reset_index(drop = True), TEST_ActivationMatrix, time
   
     def PopulatePredefinedDatabase(self):
         """ Generates a preworked example for futher testing
@@ -93,3 +93,7 @@ class BuildTestingMaterial():
         TEST_ActivationMatrix[[5,6], 7] = 1
 
         return df, TEST_ActivationMatrix, time
+
+    
+    def build_param_testing(self):
+        self.param = LoadSettings_testing()
