@@ -6,6 +6,8 @@ import sys
 sys.path.append("/home/oline/Documents/CERN/CHub/AEgIS/OnlineTools/LivePlotting/src/")
 
 from src_Analysis.BuildEvents import BuildEvents
+from BuildTestingMaterial import BuildTestingMaterial
+from LoadSettings_testing import LoadSettings_testing
 
 
 
@@ -13,13 +15,12 @@ class TestSetup(unittest.TestCase):
    
     @classmethod
     def setUpClass(cls):
-        cls.t_resolution =  5
-        cls.N_fibers     =  10
-        cls.N_points     =  19
-        cls.nr_seed      = 142
-
-        cls.edge_lim = 8
-        cls.edge_buffer = 2
+        self.BTM = BuildTestingMaterial()
+        self.rnd_df, self.rnd_matrix, self.rnd_time = self.BTM.PopulateRandomDatabase()
+        self.pw_df, self.pw_matrix, self.pw_time    = self.BTM.PopulatePredefinedDatabase()
+        self.pw_df = self.pw_df.sort_values(by = ['t']).reset_index(drop = True)
+        self.rnd_df = self.rnd_df.sort_values(by = ['t']).reset_index(drop = True)
+        self.param = LoadSettings_testing()   
 
     def setUp(self):
         self.vertex_dat = df = pd.DataFrame({'z': [5/3, 14/3, 7/2, 6/4, 14/4, 5, 2], 'r': [ 1/3,1/3, 1, 1/2, 1/2, 1/2,0]})
@@ -57,4 +58,4 @@ class TestSetup(unittest.TestCase):
         del cls.t_resolution, cls.N_fibers, cls.N_points, cls.nr_seed, cls.edge_lim, cls.edge_buffer
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main() = TestSetup()

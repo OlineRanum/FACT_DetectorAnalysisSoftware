@@ -1,3 +1,4 @@
+sys.path.append("/home/oline/Documents/CERN/CHub/AEgIS/OnlineTools/LivePlotting/src/")
 from src_VisualisationTools.plot import plot
 
 import numpy as np 

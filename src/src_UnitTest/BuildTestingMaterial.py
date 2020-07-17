@@ -1,4 +1,8 @@
-from src_UnitTest.LoadSettings_testing import LoadSettings_testing
+
+import sys
+sys.path.append("/home/oline/Documents/CERN/CHub/AEgIS/OnlineTools/LivePlotting/src/src_UnitTest")
+from LoadSettings_testing import LoadSettings_testing
+
 from numpy.random import seed
 from numpy.random import randint
 import pandas as pd 
