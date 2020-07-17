@@ -42,8 +42,8 @@ param = LoadSettings(PathSettings)
 """
 
 RA = RunAnalysis(param, MainDir, FolderData)
-#df = RA.RunSingleFileAnalysis('172011_26.txt')
-df = RA.RunMultiFileAnalysis()
+df = RA.RunSingleFileAnalysis('169613_11.txt')
+#df = RA.RunMultiFileAnalysis()
 
 # --------------------------------------------------------------------------------------------------------------
 """ Plotting commands

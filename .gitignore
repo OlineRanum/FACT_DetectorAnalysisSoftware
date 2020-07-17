@@ -3,5 +3,5 @@
 *.pyc
 *.ods
 *.ods#
-Data/
 *.odg#
+Data/

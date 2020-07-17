@@ -1,5 +1,4 @@
 from src_VisualisationTools.plot import plot
-from src_Analysis.VertexReconstructor import VertexReconstructor
 
 import numpy as np 
 import pandas as pd 
@@ -11,10 +10,12 @@ class BuildEvents():
     Layer_U = pd.DataFrame()
 
 
-    def __init__(self, MainData, param, build):
+    def __init__(self, MainData, param, build, time, count):
         self.MainData = MainData
         self.param = param
         self.build = build
+        self.time = time
+        self.count = count
 
         
     def Initiate_Standard_Analysis(self): 
@@ -36,9 +37,7 @@ class BuildEvents():
         cluster_L2 = self.FindClusters(self.Layer_U, self.param.t_res, self.param.Track_radius)
 
         # Track all paths between clusters in layer 1 and clusters in layer 2
-        construct = VertexReconstructor(cluster_L1, cluster_L2, self.param)
-        df_z = construct.TrackPath()
-        return df_z
+        return cluster_L1, cluster_L2
 
 
     def SetTail(self, tail_cut, FiberMapper_, layer_cut):
@@ -53,8 +52,12 @@ class BuildEvents():
             Returns:
                 data_: A dataframe containing only the events occuring after the tail_cut marking
         """
+        self.time = np.arange(0, np.max(self.MainData['t'].values), 5)
+        tail_cut_ = self.time[np.argmax(self.count < 800/100*tail_cut)]
+    
+
         # Select only tail data
-        self.MainData_ = self.MainData[self.MainData['t'] > tail_cut].reset_index(drop = True)
+        self.MainData_ = self.MainData[self.MainData['t'] > tail_cut_].reset_index(drop = True)
         # Make the detector mapping matrix to a mapping dataframe and merge with layer structures
         self.MainData = self.MainData_.join(pd.DataFrame({'key': np.arange(0, len(self.MainData_), 1)}))
 
@@ -66,7 +69,7 @@ class BuildEvents():
 
 
     def FindClusters(self, df, t_resolution, radius):
-        """ Functionalities:
+        """ Functionalities:  
             Find all clusters. 
             When two or more neighboring fibers are activated simultaniously, 
             whithin the restrictions from the temporal resolution of the detector,
@@ -81,19 +84,19 @@ class BuildEvents():
 
             """
         
+        df = df.sort_values('t')
+
         keys = np.array([])
         t, z, r = [],[],[]
 
         # Itterate through entire dataframe to find clusters in one given superlayer
         for i in range(len(df)):
             # Select data within the restrictions of filter 1,2 and 3
-            df_temp = df[(df['t']-df['t'].iloc[i] >= 0) &\
-                (abs(df['t']-df['t'].iloc[i]) <= t_resolution) &\
-                (abs(df['z']-df['z'].iloc[i]) <= radius) & (~df.key.isin(keys))]
+            df_temp = df[(df['t']-df['t'].loc[i] >= 0) &\
+                (df['t']-df['t'].loc[i] <= t_resolution) &\
+                (abs(df['z']-df['z'].loc[i]) <= radius) &  (~df.key.isin(keys))]
             temp_length = len(df_temp['t'])
-
-            # If the dataframe is not empty -> Process data
-            if temp_length > 0:
+            if temp_length != 0:
                 t.append(np.sum(df_temp['t'])/temp_length)
                 z.append(np.sum(df_temp['z'])/temp_length)
                 r.append(np.sum(df_temp['r'])/temp_length)
@@ -105,7 +108,7 @@ class BuildEvents():
   
         
         # Recombine cluster gaps
-        """ It can happen that a potential cluster is not combined in the itteration process above
+        """ FIX THIS SHIT It can happen that a potential cluster is not combined in the itteration process above
         The following loop runs a doubble check to make sure that all clusters are in fact isolated clusters, 
         and performs a combination in the case of two neighboring events.
         """

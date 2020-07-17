@@ -2,12 +2,11 @@ from src_BuildSystem.ReadFiles import ReadFiles
 from src_BuildSystem.Setup import Setup
 from src_Analysis.BuildEvents import BuildEvents
 from src_VisualisationTools.plot import plot
-import sys
+from src_Analysis.VertexReconstructor import VertexReconstructor
 
+import sys, os
 import pandas as pd
 import numpy as np
-import os
-
 
 
 class RunAnalysis():
@@ -32,12 +31,15 @@ class RunAnalysis():
         # Empty df for filling with z_pos, z_weight information
         verticies = pd.DataFrame(columns = ['z_pos', 'z_weight'])
 
-        # Itterate through all files in directory
+        # Itterate through all files in directory'
+        FileCount = 0
         for filename in os.listdir(self.path + self.folder):
             print(filename)
             vert = self.RunSingleFileAnalysis(filename)
             if vert is not None:
                 verticies = verticies.append(vert)
+            FileCount += 1
+            print(FileCount)
 
         return verticies.reset_index(drop = True)
     
@@ -54,13 +56,17 @@ class RunAnalysis():
 
         # Build data setup for file
         build = Setup(data, self.param)
-        MainData  = build.InitiateStandardBuild(Filename) 
+        MainData, time, count  = build.InitiateStandardBuild(Filename) 
         if MainData is None:
             return None
 
-        # Analyse file
-        events = BuildEvents(MainData, self.param, build)
-        vertecies_onefile = events.Initiate_Standard_Analysis()
+        # Find Clusters in superlayer 1 + 2 
+        events = BuildEvents(MainData, self.param, build, time, count)
+        CL1, CL2 = events.Initiate_Standard_Analysis()
+
+        # Perform a track reconstruction between clusters
+        construct = VertexReconstructor(CL1, CL2, self.param)
+        vertecies_onefile = construct.TrackPath()
 
         # Plot Live action activation
         #P = plot(MainData, self.param, build)

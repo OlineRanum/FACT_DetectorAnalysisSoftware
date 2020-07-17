@@ -19,7 +19,8 @@ class VertexReconstructor():
         z_pos, z_weight = [], []
         # Itterate over cluster database
         for i in range(len(self.Layer_I)):
-            potential_vertecies = np.where((self.Layer_U['t'].values >= self.Layer_I['t'].loc[i]) & (self.Layer_U['t'].values <= self.Layer_I['t'].loc[i] + self.param.max_travel_time))[0]
+            potential_vertecies = np.where((self.Layer_U['t'].values >= self.Layer_I['t'].loc[i]) &\
+                (self.Layer_U['t'].values <= self.Layer_I['t'].loc[i] + self.param.max_travel_time))[0]
             zp, zw = self.Z_distribution(i, potential_vertecies)
             if zp:
                 for j in range(len(zp)):
@@ -54,7 +55,7 @@ class VertexReconstructor():
         return z_vals, z_weight
 
     @staticmethod
-    def FindOriginZ(r1,r2,z1,z2):
+    def FindOriginZ_trigonometric(r1,r2,z1,z2):
         """ z_pos = z2 - dz/dr*r2 = z2 - than(theta)*r2
         """
         return z2 - (z2-z1)/(r2-r1)*r2
