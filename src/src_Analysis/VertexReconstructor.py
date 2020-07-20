@@ -1,5 +1,6 @@
 import numpy as np 
 import pandas as pd 
+import unittest
 
 class VertexReconstructor():
 
@@ -63,7 +64,46 @@ class VertexReconstructor():
 
     @staticmethod
     def FindOriginZ_extrapolate(r1,r2,z1,z2):
-        """ Using that f(x) = a*x + b
+        """ Finds the point z along the central axis r = 0 where x = -b/a 
+        Using that f(x) = a*x + b
         """
         a = (r2-r1)/(z2-z1)
         return -(r1 - a*z1)/a
+
+
+
+class test_VertexReconstructor(unittest.TestCase):
+   
+    @classmethod
+    def setUpClass(cls):
+        pass
+
+    def setUp(self):
+        pass   
+
+    def test_FindOriginZ_extrapolate(self):
+        build = VertexReconstructor(None, None, None)
+        self.assertEqual(build.FindOriginZ_extrapolate(1, 2, 1, 2), 0)
+        self.assertEqual(build.FindOriginZ_extrapolate(2, 8, 5, 9), 11/3)
+        self.assertEqual(build.FindOriginZ_extrapolate(-2, 3, -4, 0), -12/5)
+
+
+    def test_FindOriginZ_trigonometric(self):
+        build = VertexReconstructor(None, None, None)
+        self.assertEqual(np.round(build.FindOriginZ_trigonometric(1, 2, 1, 2), 5), 0)
+        self.assertEqual(np.round(build.FindOriginZ_trigonometric(2, 8, 5, 9),5), np.round(11/3,5))
+        self.assertEqual(np.round(build.FindOriginZ_trigonometric(-2, 3, -4, 0),5), np.round(-12/5,5))
+
+         
+
+    def tearDown(self):
+        pass #del 
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+    
