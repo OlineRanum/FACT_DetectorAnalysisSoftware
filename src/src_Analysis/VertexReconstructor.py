@@ -2,6 +2,12 @@ import numpy as np
 import pandas as pd 
 import unittest
 
+import sys
+
+sys.path.append("/home/oline/Documents/CERN/CHub/AEgIS/OnlineTools/LivePlotting/src/")
+
+from src_UnitTest.LoadSettings_testing import LoadSettings_testing
+
 class VertexReconstructor():
 
     def __init__(self, Layer_I, Layer_U, param):
@@ -34,6 +40,12 @@ class VertexReconstructor():
 
 
     def Z_distribution(self, i, potential_vertecies):
+        """ 
+        Input:
+            i:                      index of 
+            potential_vertecies:    list of poential verte
+        """
+     
         z_vals, z_weight = [], []
         r1 = self.Layer_I['r'].loc[i]
         z1 = self.Layer_I['z'].loc[i]
@@ -79,7 +91,17 @@ class test_VertexReconstructor(unittest.TestCase):
         pass
 
     def setUp(self):
-        pass   
+        self.param = LoadSettings_testing()       
+
+    def test_Z_distribution(self):
+        Layer_I_test = pd.DataFrame({'t': [0], 'z': [1], 'r': [1]})
+        Layer_U_test = pd.DataFrame({'t': [0,0,10,0,10], 'z': [1,-2,8,3,9] , 'r': [2,2,2,2,2]}) 
+        potential_vertecies = np.array([0,1,3])
+        i = 0
+        build = VertexReconstructor(Layer_I_test, Layer_U_test, self.param)
+        build_vertecies = build.Z_distribution(i, potential_vertecies)
+        actual_vertecies = [1, 4, -1]
+        self.assertAlmostEqual(build_vertecies[0], actual_vertecies)
 
     def test_FindOriginZ_extrapolate(self):
         build = VertexReconstructor(None, None, None)

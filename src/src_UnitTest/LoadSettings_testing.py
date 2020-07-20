@@ -27,7 +27,7 @@ class LoadSettings_testing():
         # Fiber parameters
         self.N_fibers            = 100                         # [# int] Number of fibers in detector
         self.N_points            = int(1e2)
-        self.last_fiber_position = 0                         # [mm] The length from the central fiber to the outermost fiber in layer L1 and L3
+        self.last_fiber_position = 10                         # [mm] The length from the central fiber to the outermost fiber in layer L1 and L3
         self.fiber_diameter      = 0                 # [mm] The diameter of a single fiber thread 
         self.inter_fiber_dist    = 0                    #[mm] The distance between the center of each fiber
         self.layer_offset        = 0                        # [mm] The relative z-position difference between the center axis of two neighboring fibers in two separate sublayers
