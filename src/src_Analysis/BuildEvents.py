@@ -5,6 +5,7 @@ from src_VisualisationTools.plot import plot
 import numpy as np 
 import pandas as pd 
 import unittest, os
+import matplotlib.pyplot as plt
 
 from src_UnitTest.BuildTestingMaterial import BuildTestingMaterial
 from src_UnitTest.LoadSettings_testing import LoadSettings_testing
@@ -38,7 +39,7 @@ class BuildEvents():
                 Processed dataframe  
         """
         # Find data region to conider as the tail region of the data set
-        self.SetTail(self.param.tail_time,self.param.FiberMapper, self.param.L3_min)
+        self.SetTail(self.param.start_time, self.param.stop_time,self.param.FiberMapper, self.param.L3_min)
 
         # Find all clusters in layer 1 and 2
         cluster_L1 = self.FindClusters(self.Layer_I,self.param.t_res, self.param.Track_radius)
@@ -48,7 +49,7 @@ class BuildEvents():
         return cluster_L1, cluster_L2
 
 
-    def SetTail(self, tail_cut, FiberMapper_, layer_cut):
+    def SetTail(self, tail_start, tail_stop, FiberMapper_, layer_cut):
         """ Functionalities:
             Find and set the fraction of the data corresponding to the tail of the activation curve
 
@@ -61,21 +62,22 @@ class BuildEvents():
                 data_: A dataframe containing only the events occuring after the tail_cut marking
         """
         self.time = np.arange(0, np.max(self.MainData['t'].values), 5)
-        tail_cut_ = self.time[np.argmax(self.count < 800/100*tail_cut)]
-    
-
         # Select only tail data
-        self.MainData_ = self.MainData[self.MainData['t'] > tail_cut_].reset_index(drop = True)
-
+        self.MainData_ = self.MainData[(self.MainData['t'] > tail_start) & (self.MainData['t'] < tail_stop)].sort_values('t').reset_index(drop = True)
+        self.time_ = self.time[tail_start//5: tail_stop//5]
+        self.count_ = self.count[tail_start//5: tail_stop//5]
+        #plt.plot(self.time_, self.count_[:len(self.time_)])
+        #plt.show()
+        
         # Make the detector mapping matrix to a mapping dataframe and merge with layer structures
-        if 'key' not in self.MainData.columns:
+        if 'key' not in self.MainData_.columns:
             self.MainData = self.MainData_.join(pd.DataFrame({'key': np.arange(0, len(self.MainData_), 1)}))
 
         # Set lower (Layer_I) & upper superlayer (Layer_U)
         self.Layer_I = self.MainData[self.MainData['N'] >= layer_cut].reset_index(drop = True)                                                   
         self.Layer_U = self.MainData[self.MainData['N'] < layer_cut].reset_index(drop = True)         
 
-        return self.MainData_
+        return self.MainData
 
 
     def FindClusters(self, df, t_resolution, radius):
@@ -123,6 +125,7 @@ class BuildEvents():
         and performs a combination in the case of two neighboring events.
         """
         #print(df_verticies)
+        
         i  =  0
         while i < (len(df_verticies)-1):
            # print(df_verticies['t'].loc[i])

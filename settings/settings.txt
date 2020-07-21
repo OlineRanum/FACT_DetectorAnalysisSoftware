@@ -14,7 +14,7 @@ IL4_max 798
 last_fiber_position_mm 118.8
 fiber_diameter_mm 1
 inter_fiber_dist_mm 1.2
-frames 500
+frames 10000
 layer_offset 0.6
 edge 700
 N_fibers 800
@@ -25,3 +25,6 @@ max_travel_time 5
 Track_radius 1.6
 pion_travel_time 0.1
 edge_buffer 25
+start_time 2000
+stop_time 20000
+

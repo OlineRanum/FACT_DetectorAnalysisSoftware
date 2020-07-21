@@ -62,6 +62,8 @@ class LoadSettings():
         self.edge_buffer = int(self.geometry['edge_buffer'][0])
         self.tail = int(self.geometry['tail'][0])                                   # [# int] A number of simultaniously activated fibers indicating the region to concider for analysis on the activation curve tail
         self.tail_time = int(self.geometry['tail_active_fiber_percentage'][0])      # [% 0-100] A time indicating the region to concider for analysis on the activation curve tail
+        self.start_time = int(self.geometry['start_time'][0])
+        self.stop_time = int(self.geometry['stop_time'][0])
 
         # Physical parameters
         self.max_travel_time = self.geometry['max_travel_time'][0]                  # [ns] The maximum allowed and possible traveling time for the particle in concideration between the two superlayers

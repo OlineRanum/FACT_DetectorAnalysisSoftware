@@ -58,17 +58,20 @@ class VertexReconstructor():
         r1 = self.Layer_I['r'].loc[i]
         z1 = self.Layer_I['z'].loc[i]
         tossed = 0
-        for j in potential_vertecies:
-            r2 = self.Layer_U['r'].loc[j]
-            z2 = self.Layer_U['z'].loc[j]
-            if z1 != z2:
-                z_pos = self.FindOriginZ_extrapolate(r1, r2, z1, z2)
-            else: 
-                z_pos = z2
-            if (z_pos < self.param.last_fiber_position) and (z_pos >-self.param.last_fiber_position):
-                z_vals.append(z_pos)
-            else: 
-                tossed  += 1
+        # TOSS Large Combinatorics
+        if len(potential_vertecies) < 5:
+            for j in potential_vertecies:
+                r2 = self.Layer_U['r'].loc[j]
+                z2 = self.Layer_U['z'].loc[j]
+                if z1 != z2:
+                    z_pos = self.FindOriginZ_extrapolate(r1, r2, z1, z2)
+                else: 
+                    z_pos = z2
+                # Toss z from outside the detector 
+                if (z_pos < self.param.last_fiber_position) and (z_pos >-self.param.last_fiber_position):
+                    z_vals.append(z_pos)
+                else: 
+                    tossed  += 1
 
         if potential_vertecies.size != tossed:
             z_weight = np.ones(len(z_vals))/(potential_vertecies.size - tossed)
