@@ -4,6 +4,12 @@ from src_VisualisationTools.plot import plot
 
 import numpy as np 
 import pandas as pd 
+import unittest, os
+
+from src_UnitTest.BuildTestingMaterial import BuildTestingMaterial
+from src_UnitTest.LoadSettings_testing import LoadSettings_testing
+
+
 
 
 class BuildEvents():
@@ -60,8 +66,10 @@ class BuildEvents():
 
         # Select only tail data
         self.MainData_ = self.MainData[self.MainData['t'] > tail_cut_].reset_index(drop = True)
+
         # Make the detector mapping matrix to a mapping dataframe and merge with layer structures
-        self.MainData = self.MainData_.join(pd.DataFrame({'key': np.arange(0, len(self.MainData_), 1)}))
+        if 'key' not in self.MainData.columns:
+            self.MainData = self.MainData_.join(pd.DataFrame({'key': np.arange(0, len(self.MainData_), 1)}))
 
         # Set lower (Layer_I) & upper superlayer (Layer_U)
         self.Layer_I = self.MainData[self.MainData['N'] >= layer_cut].reset_index(drop = True)                                                   
@@ -127,9 +135,60 @@ class BuildEvents():
         return df_verticies
             
 
-    def __repr__(self):
-        return "AnalysisToolBox:\nCurrent Dataframe: \n'{}'\n'{}'\n".format(self.MainData, [print(i, ': ', self.param.__dict__[i]) for i in self.param.__dict__])
-    
-    def __str__(self):
-        return "\nCurrent Dataframe: 'n'{}'\n'{}'\n ".format(self.MainData, [print(i, ': ', self.param.__dict__[i]) for i in self.param.__dict__])
+class TestSetup(unittest.TestCase):
+   
+    @classmethod
+    def setUpClass(cls):
+        cls.BTM = BuildTestingMaterial()
+        cls.rnd_df, cls.rnd_matrix, cls.rnd_time = cls.BTM.PopulateRandomDatabase()
+        cls.pw_df,  cls.pw_matrix,  cls.pw_time  = cls.BTM.PopulatePredefinedDatabase()
+        cls.pw_df = cls.pw_df.sort_values(by = ['t']).reset_index(drop = True)
+        cls.rnd_df =cls.rnd_df.sort_values(by = ['t']).reset_index(drop = True)
+        cls.param = LoadSettings_testing()   
+
+    def setUp(self):
+        self.vertex_dat = df = pd.DataFrame({'z': [5/3, 14/3, 7/2, 6/4, 14/4, 5, 2], 'r': [ 1/3,1/3, 1, 1/2, 1/2, 1/2,0]})
+        self.raw_dat = pd.read_csv("Example_Data/ex1_rawdata.csv")
+        self.ActivationMatrix = pd.read_csv('Example_Data/ex1_ActivationMatrix.csv').values
+
+        count = np.sum(self.ActivationMatrix, axis = 0)
+        time = np.arange(0, np.max(self.raw_dat['t']), 5)
+        self.ATB = BuildEvents(self.raw_dat, None, None, count, time)
         
+    def test_SetTail(self):
+        CoordinateMatrix_ = self.raw_dat[['N', 'r', 'z']].copy()
+        
+        layer_cut_predefined = 5
+        tail_cut_predefined  = 20 
+        
+        
+        testing_df = self.ATB.SetTail(tail_cut_predefined, CoordinateMatrix_.values, layer_cut_predefined)
+        # NBNBNB! This shit is dependent on something else, likely to be set in settings parameter
+        self.assertEqual(CoordinateMatrix_[4:]['N'].values.tolist(), testing_df['N'].values.tolist())
+        self.assertEqual(CoordinateMatrix_[4:]['r'].values.tolist(), testing_df['r'].values.tolist())
+        self.assertEqual(CoordinateMatrix_[4:]['z'].values.tolist(), testing_df['z'].values.tolist())
+
+
+    def test_FindCluster(self):
+        df = self.ATB.FindClusters(self.raw_dat, 5.1, 1.1)
+        self.assertEqual(df['z'].values.tolist(), self.vertex_dat['z'].values.tolist())
+        self.assertEqual(df['r'].values.tolist(), self.vertex_dat['r'].values.tolist())
+    
+    def tearDown(self):
+        del self.vertex_dat, self.raw_dat, self.ActivationMatrix
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+        #del self.__class__.t_resolution, cls.N_fibers, cls.N_points, cls.nr_seed, cls.edge_lim, cls.edge_buffer
+
+if __name__ == '__main__':
+    unittest.main()
+
+
+
+def __repr__(self):
+    return "AnalysisToolBox:\nCurrent Dataframe: \n'{}'\n'{}'\n".format(self.MainData, [print(i, ': ', self.param.__dict__[i]) for i in self.param.__dict__])
+
+def __str__(self):
+    return "\nCurrent Dataframe: 'n'{}'\n'{}'\n ".format(self.MainData, [print(i, ': ', self.param.__dict__[i]) for i in self.param.__dict__])
