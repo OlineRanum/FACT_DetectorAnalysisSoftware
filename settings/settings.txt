@@ -19,8 +19,9 @@ layer_offset 0.6
 edge 700
 N_fibers 800
 Time_resolution_ns 5
-tail 5
-tail_time 1100
-max_travel_time 10
+tail 2
+tail_active_fiber_percentage 2
+max_travel_time 5
 Track_radius 1.6
 pion_travel_time 0.1
+edge_buffer 25

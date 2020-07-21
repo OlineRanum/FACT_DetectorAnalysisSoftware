@@ -22,19 +22,24 @@ class VertexReconstructor():
         - we only concider the paths going from layer 1 to layer 2
 
         """
-
         z_pos, z_weight = [], []
         # Itterate over cluster database
         for i in range(len(self.Layer_I)):
-            potential_vertecies = np.where((self.Layer_U['t'].values >= self.Layer_I['t'].loc[i]) &\
-                (self.Layer_U['t'].values <= self.Layer_I['t'].loc[i] + self.param.max_travel_time))[0]
+            # Select events occuring within the same time binnings, np.wer
+            potential_vertecies = np.where(self.Layer_U['t'].values == self.Layer_I['t'].loc[i])[0]
+            
+            #potential_vertecies = np.where((self.Layer_U['t'].values >= self.Layer_I['t'].loc[i]) &\
+            #    (self.Layer_U['t'].values <= self.Layer_I['t'].loc[i] + self.param.max_travel_time))[0]
+            # Calculate the events that relates in time to the i'th lower layer event
             zp, zw = self.Z_distribution(i, potential_vertecies)
+            # If zp is not empty -> I.e. a particle crossed both layers 
             if zp:
                 for j in range(len(zp)):
                     z_pos.append(zp[j])
                     z_weight.append(zw[j])
+
+        # Put everything back into a dataframe
         df_z = pd.DataFrame({'z_pos': z_pos, 'z_weight': z_weight})
-        df_z = df_z.sort_values(by = 'z_pos')
         return df_z
         
 
@@ -42,11 +47,14 @@ class VertexReconstructor():
     def Z_distribution(self, i, potential_vertecies):
         """ 
         Input:
-            i:                      index of 
-            potential_vertecies:    list of poential verte
+            i:                      index of lower layer cluster for which to compare with upper layer clusters
+            potential_vertecies:    list of indices of locations for potential vertecies
+
+        Tracks and locates vertecies 
         """
      
         z_vals, z_weight = [], []
+        # Lock the i'th data
         r1 = self.Layer_I['r'].loc[i]
         z1 = self.Layer_I['z'].loc[i]
         tossed = 0
@@ -93,15 +101,26 @@ class test_VertexReconstructor(unittest.TestCase):
     def setUp(self):
         self.param = LoadSettings_testing()       
 
+    def test_TrackPath(self):
+        Layer_I_test = pd.DataFrame({'t': [0,5,5,15,20,25], 'z': [1,0,-3,2,5,-1], 'r': [1,1,1,1,1,1]})
+        Layer_U_test = pd.DataFrame({'t': [0,5,5,10,15,20], 'z': [1,3,2,5,-4,1], 'r': [2,2,2,2,2,2]})
+        build = VertexReconstructor(Layer_I_test, Layer_U_test, self.param)
+        solution_pos = [1, -3, -2, -9, -8, 8, 9]
+        solution_weight = [1,0.5,0.5,0.5,0.5,1,1]
+        build_solution = build.TrackPath()
+        self.assertEqual(build_solution['z_pos'].values.tolist(), solution_pos)
+        self.assertEqual(build_solution['z_weight'].values.tolist(), solution_weight)
+
+
+
     def test_Z_distribution(self):
         Layer_I_test = pd.DataFrame({'t': [0], 'z': [1], 'r': [1]})
         Layer_U_test = pd.DataFrame({'t': [0,0,10,0,10], 'z': [1,-2,8,3,9] , 'r': [2,2,2,2,2]}) 
         potential_vertecies = np.array([0,1,3])
-        i = 0
         build = VertexReconstructor(Layer_I_test, Layer_U_test, self.param)
-        build_vertecies = build.Z_distribution(i, potential_vertecies)
+        build_vertecies = build.Z_distribution(0, potential_vertecies)
         actual_vertecies = [1, 4, -1]
-        self.assertAlmostEqual(build_vertecies[0], actual_vertecies)
+        self.assertEqual(build_vertecies[0], actual_vertecies)
 
     def test_FindOriginZ_extrapolate(self):
         build = VertexReconstructor(None, None, None)
@@ -112,9 +131,9 @@ class test_VertexReconstructor(unittest.TestCase):
 
     def test_FindOriginZ_trigonometric(self):
         build = VertexReconstructor(None, None, None)
-        self.assertEqual(np.round(build.FindOriginZ_trigonometric(1, 2, 1, 2), 5), 0)
-        self.assertEqual(np.round(build.FindOriginZ_trigonometric(2, 8, 5, 9),5), np.round(11/3,5))
-        self.assertEqual(np.round(build.FindOriginZ_trigonometric(-2, 3, -4, 0),5), np.round(-12/5,5))
+        self.assertAlmostEqual(build.FindOriginZ_trigonometric(1, 2, 1, 2), 0, places = 5)
+        self.assertAlmostEqual(build.FindOriginZ_trigonometric(2, 8, 5, 9), 11/3, places = 5)
+        self.assertAlmostEqual(build.FindOriginZ_trigonometric(-2, 3, -4, 0), -12/5, places = 5)
 
          
 
