@@ -98,24 +98,30 @@ class BuildEvents():
         
         df = df.sort_values('t')
 
-        keys = np.array([])
+        process_keys = np.array([])
         t, z, r = [],[],[]
 
         # Itterate through entire dataframe to find clusters in one given superlayer
         for i in range(len(df)):
             # Select data within the restrictions of filter 1,2 and 3
-            df_temp = df[(df['t']-df['t'].loc[i] >= 0) &\
-                (df['t']-df['t'].loc[i] <= t_resolution) &\
-                (abs(df['z']-df['z'].loc[i]) <= radius) &\
-                (~df.key.isin(keys))]
-            temp_length = len(df_temp['t'])
-            if temp_length != 0:
-                t.append(np.sum(df_temp['t'])/temp_length)
-                z.append(np.sum(df_temp['z'])/temp_length)
-                r.append(np.sum(df_temp['r'])/temp_length)
+            df_tempT = df[
+                (abs(df['t']-df['t'].loc[i]) <= t_resolution) &\
+                (~df.key.isin(process_keys))]
+            for j in range(len(df_tempT)):
+                df_tempZ = df_tempT[abs(df_tempT['z'] - df_tempT['z'].iloc[j]) < self.param.Track_radius]
+                if len(df_tempZ) != 0:
+                    if len(df_tempZ) > 1:
+                        z_ =  np.sum(df_tempZ['z'].values)/len(df_tempZ)
+                        df_temp = df_tempT[abs(df_tempT['z'] - z_) < self.param.Track_radius]
+                    else: 
+                        df_temp = df_tempZ
 
-                # Mark that data has already been processed
-                keys = np.append(keys,df_temp['key'].values)
+                    t.append(np.sum(df_temp['t'])/len(df_temp))
+                    z.append(np.sum(df_temp['z'])/len(df_temp))
+                    r.append(np.sum(df_temp['r'])/len(df_temp))
+                    # Mark that data has already been processed
+                    process_keys = np.append(process_keys,df_temp['key'].values)
+   
 
         df_verticies = pd.DataFrame({'t': t, 'z': z, 'r': r}).sort_values(['t','z']).reset_index(drop = True)
   
