@@ -49,8 +49,9 @@ df = RA.RunMultiFileAnalysis()
 """ Plotting commands
 P.hist(df): plots the z_position, z_weight histogram
 """
-P = plot(None, param, None)
+P = plot(df, param, None)
 P.hist(df)
+P.z_incoming()
 
 # --------------------------------------------------------------------------------------------------------------
 

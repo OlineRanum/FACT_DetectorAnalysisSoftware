@@ -108,11 +108,11 @@ class BuildEvents():
                 (abs(df['t']-df['t'].loc[i]) <= t_resolution) &\
                 (~df.key.isin(process_keys))]
             for j in range(len(df_tempT)):
-                df_tempZ = df_tempT[abs(df_tempT['z'] - df_tempT['z'].iloc[j]) < self.param.Track_radius]
+                df_tempZ = df_tempT[abs(df_tempT['z'] - df_tempT['z'].iloc[j]) < radius]
                 if len(df_tempZ) != 0:
                     if len(df_tempZ) > 1:
                         z_ =  np.sum(df_tempZ['z'].values)/len(df_tempZ)
-                        df_temp = df_tempT[abs(df_tempT['z'] - z_) < self.param.Track_radius]
+                        df_temp = df_tempT[abs(df_tempT['z'] - z_) < radius]
                     else: 
                         df_temp = df_tempZ
 

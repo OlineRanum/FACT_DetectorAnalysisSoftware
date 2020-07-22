@@ -24,7 +24,7 @@ max_travel_time 5
 Track_radius 1.6
 pion_travel_time 0.1
 edge_buffer 25
-start_time 2000
+start_time 1500
 stop_time 20000
 min_time 0 
 max_time 30000

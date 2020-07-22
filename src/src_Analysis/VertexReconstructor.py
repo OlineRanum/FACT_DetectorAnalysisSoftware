@@ -20,26 +20,25 @@ class VertexReconstructor():
         Assumptions:
         self.Layer_I is the inner layer with the smaller radius
         - we only concider the paths going from layer 1 to layer 2
-
         """
-        z_pos, z_weight = [], []
+        z_pos, z_weight, z_time = [], [], []
         # Itterate over cluster database
         for i in range(len(self.Layer_I)):
             # Select events occuring within the same time binnings, np.wer
             potential_vertecies = np.where(self.Layer_U['t'].values == self.Layer_I['t'].loc[i])[0]
-            
             #potential_vertecies = np.where((self.Layer_U['t'].values >= self.Layer_I['t'].loc[i]) &\
             #    (self.Layer_U['t'].values <= self.Layer_I['t'].loc[i] + self.param.max_travel_time))[0]
             # Calculate the events that relates in time to the i'th lower layer event
-            zp, zw = self.Z_distribution(i, potential_vertecies)
+            zp, zw, zt = self.Z_distribution(i, potential_vertecies)
             # If zp is not empty -> I.e. a particle crossed both layers 
             if zp:
                 for j in range(len(zp)):
                     z_pos.append(zp[j])
                     z_weight.append(zw[j])
+                    z_time.append(zt)
 
         # Put everything back into a dataframe
-        df_z = pd.DataFrame({'z_pos': z_pos, 'z_weight': z_weight})
+        df_z = pd.DataFrame({'z_pos': z_pos, 'z_weight': z_weight,  'z_time': z_time})
         return df_z
         
 
@@ -57,6 +56,7 @@ class VertexReconstructor():
         # Lock the i'th data
         r1 = self.Layer_I['r'].loc[i]
         z1 = self.Layer_I['z'].loc[i]
+        t1 = self.Layer_I['t'].loc[i]
         tossed = 0
         # TOSS Large Combinatorics
         if len(potential_vertecies) < 5:
@@ -76,7 +76,7 @@ class VertexReconstructor():
         if potential_vertecies.size != tossed:
             z_weight = np.ones(len(z_vals))/(potential_vertecies.size - tossed)
 
-        return z_vals, z_weight
+        return z_vals, z_weight, t1
 
     @staticmethod
     def FindOriginZ_trigonometric(r1,r2,z1,z2):

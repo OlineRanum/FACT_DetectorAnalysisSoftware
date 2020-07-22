@@ -77,3 +77,16 @@ class plot():
         ax1.tick_params(axis='both', which='minor', labelsize=self.fsize)
         ax1.set_title('FACT Detector Vertex count', fontsize =self.psize, pad = self.tpsize)
         plt.show()
+
+
+    def z_incoming(self):
+        plt.close()
+        plt.figure(figsize = (20,10))
+        ax1 = plt.axes()
+        ax1.plot(self.data['z_time'], self.data['z_pos'].values, '.')
+        ax1.set_xlabel('t [s]', fontsize = self.fsize,  labelpad =self.psize)
+        ax1.set_ylabel('z-origin', fontsize = self.fsize, labelpad =self.psize)
+        ax1.tick_params(axis='both', which='major', labelsize=self.fsize)
+        ax1.tick_params(axis='both', which='minor', labelsize=self.fsize)
+        ax1.set_title('FACT Z-Vertex over time', fontsize =self.psize, pad = self.tpsize)
+        plt.show()
