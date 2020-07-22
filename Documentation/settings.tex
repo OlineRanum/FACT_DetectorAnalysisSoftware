@@ -22,33 +22,33 @@
 \begin{center}
 	\begin{tabular}{|p{4cm}|p{1.5cm}|p{3cm}|p{8cm}|} \hline
 		\textbf{Parameter name} & \textbf{ Units } & \textbf{Standard value} & \textbf{description} \\ \hline 
-		  r1 & mm & 70.00 &\\ \hline
-		  r2 & mm & 70.86 & \\  \hline
-		  r3 & mm & 98.00 & \\ \hline
-		  r4 & mm & 98.86 &  \\  \hline
-		  IL1\_min&\#& 0 & \\  \hline
-		  IL1\_max&\#& 197 & \\  \hline
-		  IL2\_min&\#& 200 & \\ \hline
-		  IL2\_max&\#& 398 & \\ \hline
-		  IL3\_min&\#& 400 & \\ \hline
-		  IL3\_max&\#& 597 & \\ \hline
- 		  IL4\_min&\#& 600 & \\ \hline
-		  IL4\_max&\#& 798 &  \\ \hline
-		  last\_fiber\_position&mm& 118.8 & \\ \hline
-		  fiber\_diameter&mm& 1& \\ \hline
-		  inter\_fiber\_dist&mm& 1.2& \\ \hline
-		  layer\_offset&mm& 0.6 & \\ \hline
-		  edge &\#& 700 & \\ \hline
+		  r1 & mm & 70.00 & Radius of inner-inner (sub-super) fiber-layer\\ \hline
+		  r2 & mm & 70.86 &Radius of outer-inner  fiber-layer\\  \hline
+		  r3 & mm & 98.00 & Radius of inner-outer fiber-layer\\ \hline
+		  r4 & mm & 98.86 &  Radius of outer-outer fiber-layer\\  \hline
+		  IL1\_min&\#& 0 & Fiber number of leftmost fiber of inner-inner fiber-layer \\  \hline
+		  IL1\_max&\#& 197 &Fiber number of rightmost fiber of inner-inner fiber-layer  \\  \hline
+		  IL2\_min&\#& 200 &Fiber number of leftmost fiber of outer-inner fiber-layer  \\ \hline
+		  IL2\_max&\#& 398 & Fiber number of rightmost fiber of outer-inner fiber-layer \\ \hline
+		  IL3\_min&\#& 400 & Fiber number of leftmost fiber of inner-outer fiber-layer \\ \hline
+		  IL3\_max&\#& 597 &Fiber number of rightmost fiber of inner-outer fiber-layer  \\ \hline
+ 		  IL4\_min&\#& 600 &Fiber number of leftmost fiber of outer-outer fiber-layer  \\ \hline
+		  IL4\_max&\#& 798 &Fiber number of rightmost fiber of outer-outer fiber-layer   \\ \hline
+		  last\_fiber\_position&mm& 118.8 & the position of the outermost fiber at the inner sublayers of both superlayers from the vertical central axis \\ \hline
+		  fiber\_diameter&mm& 1& The diamater of a single Kuraray SCSF-78M plastic scintillating fiber.\\ \hline
+		  inter\_fiber\_dist&mm& 1.2& The distance between the central axis going through two mounted fibers\\ \hline
+		  layer\_offset&mm& 0.6 & The horizontal distance between two neighboring fibres, where one is positioned in the upper sublayer and the other in the lower sublayer of a single superlayer   \\ \hline
+		  edge &\#& 700 & The number of simultaneously active fibres indicating the arrival of the particle injection. This number sets the initial time cut on the total data array. \\ \hline
 		  N\_fibers&\#& 798& Note: Real amount of fibers are 794, but no fibers with index 198,199, 399, 598 or 599. \\ \hline
-		  Time\_resolution&ns& 5& \\ \hline
-		  max\_travel\_time &ns&& \\ \hline 
-		  Track\_radius&mm&& \\ \hline
-		  pion\_travel\_time &m/ns&& \\ \hline
-		  edge\_buffer &\#&& \\ \hline
-		  start\_time&ns&& \\ \hline
-		  stop\_time&ns&& \\ \hline
-		  min\_time&ns&& \\ \hline
-		  max\_time&ns&& \\ \hline
+		  Time\_resolution&ns& 5& The time resolution of the electronic readout system, currently at 5ns.  \\ \hline
+		  max\_travel\_time &ns&5& The max traveling time for a particle to traverse the detector, note that this one will have to be specified for each particle\\ \hline 
+		  Track\_radius&mm&1.6& The radious around a point for which to search for clustering \\ \hline
+		  pion\_travel\_time &m/ns&0.1& The traveling velocity of a pion\\ \hline
+		  edge\_buffer &\#&0& A parameter to be set when some data before the rising edge needs to be acquired.  \\ \hline
+		  start\_time&ns&2000& The time after the rising edge of which to begin sampling the tail data \\ \hline
+		  stop\_time&ns&20000& The time after the rising edge of which to stop sampling tail data\\ \hline
+		  min\_time&ns&0& minimum sampling time\\ \hline
+		  max\_time&ns&30000& maximum sampling time\\ \hline
 	\end{tabular}
 \end{center}
 
