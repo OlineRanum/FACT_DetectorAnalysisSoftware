@@ -60,10 +60,11 @@ class LoadSettings():
         self.frames = int(self.geometry['frames'][0])                               # [# int] The time frame of the evaluated data, given by a frame index typically of 500
         self.rising_edge = int(self.geometry['edge'][0])                            # [# int] A number of simultaniously activated fibers indicating the incoming porsitronium burst
         self.edge_buffer = int(self.geometry['edge_buffer'][0])
-        self.tail = int(self.geometry['tail'][0])                                   # [# int] A number of simultaniously activated fibers indicating the region to concider for analysis on the activation curve tail
         self.tail_time = int(self.geometry['tail_active_fiber_percentage'][0])      # [% 0-100] A time indicating the region to concider for analysis on the activation curve tail
         self.start_time = int(self.geometry['start_time'][0])
         self.stop_time = int(self.geometry['stop_time'][0])
+        self.min_time = int(self.geometry['min_time'][0])
+        self.max_time = int(self.geometry['max_time'][0])
 
         # Physical parameters
         self.max_travel_time = self.geometry['max_travel_time'][0]                  # [ns] The maximum allowed and possible traveling time for the particle in concideration between the two superlayers

@@ -73,14 +73,13 @@ class Setup():
         6. Set the first hit to be at t = 0
         7. Combine Root file data with coordinate matrix 
         """
-       
-        t   = np.array(self.MainData['t'], dtype = int)//self.param.t_res
-        tot = np.array(self.MainData['tot'],  dtype = int)//self.param.t_res
+        time_res = self.param.t_res
+        t        = np.array(self.MainData['t'], dtype = int)//time_res
+        tot      = np.array(self.MainData['tot'],  dtype = int)//time_res
 
-        # 1. Timebase from min and max time in main dataframe, with intervals corresponding to the detectors temporal resolution
-        self.time = np.arange(self.MainData['t'].loc[np.argmin(self.MainData['t'])],self.MainData['t'].loc[np.argmax(self.MainData['t'])] + self.param.t_res, self.param.t_res)
-        # 1. Array to be filled with the number of activated fibers at eatch time step
-        self.count = np.zeros(len(self.time))
+        # 1. Base Arrays
+        self.time = np.arange(np.min(t)*time_res, (np.max(t)+1)*time_res, time_res)         #  Timebase from min and max time in main dataframe, with intervals corresponding to the detectors temporal resolution
+        self.count = np.zeros(len(self.time))                                               #  Array to be filled with the number of activated fibers at eatch time step
 
         # 2. Count number of activated fibers at eatch time t, given from main dataframe
         for i in range(len(self.MainData)):
@@ -89,19 +88,25 @@ class Setup():
         # Test that file is in fact a runfile and not a claibration file
         if self.EvaluateFile() is None: return None
         
-        # 3. Find index where count > param.rising_edge
-        EdgeIndex = int(np.argmax(self.count >= self.param.rising_edge)) - self.param.edge_buffer
-        EndIndex = EdgeIndex+int(self.param.frames) 
+        # 3. Find index where # Active fibers > param.rising_edge
+        EdgeIndex = np.argmax(self.count >= self.param.rising_edge) - self.param.edge_buffer
+        EndIndex = EdgeIndex + self.param.max_time//5
+        if EndIndex >= self.time[-1]//5: 
+            EndIndex =  self.time[-1]//5
+
         
         # 4. Crop Data to zones restricted by EdgeIndex and EndIndex
         self.MainData = self.MainData[(self.MainData['t'] >= self.time[EdgeIndex]) &\
             (self.MainData['t'] <= self.time[EndIndex])].reset_index(drop = True)
+
 
         self.time = self.time[EdgeIndex: EndIndex]
         self.count = self.count[EdgeIndex: EndIndex]
 
         try: self.t0 = int(self.time[0])
         except IndexError: self.t0 = 0 
+
+        
 
         # 5. Build Activation matrix - Must be done before the time reset - FIX THIS 
         self.ConstructActivationMatrix(self.time)
@@ -184,7 +189,6 @@ class test_Setup(unittest.TestCase):
         self.assertEqual(pw_MatrixBuild.flatten().tolist(), self.pw_matrix.flatten().tolist())
              
     def test_PrepareFACTData(self):
-
         test_build = Setup(self.rnd_df, self.param)
         test_count = np.sum(self.rnd_matrix, axis = 0)
         self.param.rising_edge = np.max(test_count)/10*8

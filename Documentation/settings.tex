@@ -1,0 +1,56 @@
+%%%%%%%%%%%%%%%%% PREAMBLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Change the font size of your document - 10pt, 12.1pt, etc.
+\documentclass[article,9pt,oneside]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{tabularx}
+
+\usepackage{graphicx}
+\graphicspath{ {images/}} %upload your signature to this file
+%Change the margins to fit your CV/resume content
+\usepackage[left=1in, right=1in, bottom=0.75in, top=0.75in]{geometry}
+
+\setlength\parindent{0pt}
+
+%Changes the page numbers - {arabic}=arabic numerals, {gobble}=no page numbers, {roman}=Roman numerals
+\pagenumbering{gobble}
+\begin{document}
+
+\section*{Parameter guide}
+
+\begin{center}
+	\begin{tabular}{|p{4cm}|p{1.5cm}|p{3cm}|p{8cm}|} \hline
+		\textbf{Parameter name} & \textbf{ Units } & \textbf{Standard value} & \textbf{description} \\ \hline 
+		  r1 & mm & 70.00 &\\ \hline
+		  r2 & mm & 70.86 & \\  \hline
+		  r3 & mm & 98.00 & \\ \hline
+		  r4 & mm & 98.86 &  \\  \hline
+		  IL1\_min&\#& 0 & \\  \hline
+		  IL1\_max&\#& 197 & \\  \hline
+		  IL2\_min&\#& 200 & \\ \hline
+		  IL2\_max&\#& 398 & \\ \hline
+		  IL3\_min&\#& 400 & \\ \hline
+		  IL3\_max&\#& 597 & \\ \hline
+ 		  IL4\_min&\#& 600 & \\ \hline
+		  IL4\_max&\#& 798 &  \\ \hline
+		  last\_fiber\_position&mm& 118.8 & \\ \hline
+		  fiber\_diameter&mm& 1& \\ \hline
+		  inter\_fiber\_dist&mm& 1.2& \\ \hline
+		  layer\_offset&mm& 0.6 & \\ \hline
+		  edge &\#& 700 & \\ \hline
+		  N\_fibers&\#& 798& Note: Real amount of fibers are 794, but no fibers with index 198,199, 399, 598 or 599. \\ \hline
+		  Time\_resolution&ns& 5& \\ \hline
+		  max\_travel\_time &ns&& \\ \hline 
+		  Track\_radius&mm&& \\ \hline
+		  pion\_travel\_time &m/ns&& \\ \hline
+		  edge\_buffer &\#&& \\ \hline
+		  start\_time&ns&& \\ \hline
+		  stop\_time&ns&& \\ \hline
+		  min\_time&ns&& \\ \hline
+		  max\_time&ns&& \\ \hline
+	\end{tabular}
+\end{center}
+
+
+\end{document}

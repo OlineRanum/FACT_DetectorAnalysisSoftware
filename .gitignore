@@ -4,4 +4,9 @@
 *.ods
 *.ods#
 *.odg#
+*.pdf
+*.gz
+*.out
+*.log
+*.aux
 Data/

@@ -106,7 +106,8 @@ class BuildEvents():
             # Select data within the restrictions of filter 1,2 and 3
             df_temp = df[(df['t']-df['t'].loc[i] >= 0) &\
                 (df['t']-df['t'].loc[i] <= t_resolution) &\
-                (abs(df['z']-df['z'].loc[i]) <= radius) &  (~df.key.isin(keys))]
+                (abs(df['z']-df['z'].loc[i]) <= radius) &\
+                (~df.key.isin(keys))]
             temp_length = len(df_temp['t'])
             if temp_length != 0:
                 t.append(np.sum(df_temp['t'])/temp_length)
