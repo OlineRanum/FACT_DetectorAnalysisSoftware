@@ -90,11 +90,12 @@ Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingle
 
 *plot*: stores methods for plotting and visualizations.
 
-![See Documentation folder](Documentation/ProgramFlowChart.gif)
+The program flowchart is presented in the figure below.
 
-### Vertex Analysis 
-The standard analysis packages entail a vertex reconstruction along the z-axis, returning the position of a vertex and the weight of the vertex. 
-The weight of a vertex is defined as 1/(The number of potential particle origins), as the combinatorics might yield several solutions for potential vertices within a certain time/space region. 
+<p align="center">
+  <img src="Documentation/ProgramFlowChart.gif">
+   <figcaption>Fig.2 - Softwear flowchart</figcaption>
+</p>
 
 
 ## Main Information Holders
@@ -107,7 +108,14 @@ The analysis is run with three primary information holder structures. This data 
 2. *MainData:* Main data holds the raw data file containing the fiber activation information of fiber number N, activation timestamp t, and the time over threshold tot. During the SetUp.CombineDatabases() procedure, this main dataframe is expanded to include the r, z positioning of each fiber N. I.e. a DataFrame on the column format ['N', 't', 'tot', 'z', 'r'].
 
 
+# FACT Basics
 
+The honeycomb structure of the sublayers are illustrated in the figure below, as well as the FACT mapping. 
+
+<p align="center">
+  <img src="Images/Figures/Honey_comb.png">
+   <figcaption>Fig.3 - Illustration of the interior structure of FACT showing the outer edges of the four superlayers sorted in two superlayers.</figcaption>
+</p>
 
 ## Raw Data Files
 The FACT system produces raw datafiles on the format of
@@ -147,9 +155,6 @@ Ideas for future development
 ## Support 
 Primary developer: Oline Ranum - olinear@uio.no
 
-    
-## How to start with getting to know the project 
-..............
 
 # Project status
 Early stages of development 
