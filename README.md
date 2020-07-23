@@ -72,20 +72,24 @@ Primary developer: Oline Ranum - olinear@uio.no
         
 
 
-## Flow
+## FlowChart and FlowStructure
 
     Run through main.py.
 
-*Main.py*: Performs three tasks. 1) Loads param = Sets detector parameters. 2) Makes a call to the RunAnalysis modules, and sets whether to perform a single file or a multi-file analysis. 3) Makes final call to plotting and visualization.
+*Main.py*: Performs three tasks. 
+  1. Loads param = Sets detector parameters. 
+  2. Makes a call to the RunAnalysis modules, and sets whether to perform a single file or a multi-file analysis. 
+  3. Makes final call to plotting and visualization.
 
 *RunAnalysis*: Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then calls to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided. When RunMultiFileAnalysis is called, a call is made to RunSingleFileAnalysis for each file in the directory. The information is then collected in a single large Dataframe containing the combined list of the vertices from all the individual files. 
+
+
+![See Documentation folder](Documentation/ProgramFlowChart.gif)
 
 ### Vertex Analysis 
 The standard analysis packages entail a vertex reconstruction along the z-axis, returning the position of a vertex and the weight of the vertex. 
 The weight of a vertex is defined as 1/(The number of potential particle origins), as the combinatorics might yield several solutions for potential vertices within a certain time/space region. 
 
-## FlowChart
-![See Documentation folder](Documentation/ProgramFlowChart.gif)
 
 ## Main Information Holders
 The analysis is run with three primary information holder structures. This data comes from two primeary sources, the first is the raw data put out by FACT, the second is the external input of physical detector parameters. 
