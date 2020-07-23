@@ -46,10 +46,6 @@ or by running the modules directly
     ../LivePlotting/src/src_<module>$: <module>.py
     ../LivePlotting/src/src_SetUp$: SetUp.py
 
-
-## Support 
-Primary developer: Oline Ranum - olinear@uio.no
-
 # Build
 
     Data_Example:
@@ -81,8 +77,18 @@ Primary developer: Oline Ranum - olinear@uio.no
   2. Makes the desiered analysis modules as a call to either a single file or a multi-file analysis. 
   3. Makes final call to plotting and visualization modules.
 
-*RunAnalysis*: Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then calls to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided. When RunMultiFileAnalysis is called, a call is made to RunSingleFileAnalysis for each file in the directory. The information is then collected in a single large Dataframe containing the combined list of the vertices from all the individual files. !NB TO self: Single file analysis should just be another case of multifile analysis, remove this at a later time. 
+*LoadSettings*: Loads the param unit from the settings.csv file. 
 
+*RunAnalysis*: Contains initiator for Setup and Analysis. Allows for either running entire directories or singular files. 
+Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then calls to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided. When RunMultiFileAnalysis is called, a call is made to RunSingleFileAnalysis for each file in the directory. The information is then collected in a single large Dataframe containing the combined list of the vertices from all the individual files. !NB TO self: Single file analysis should just be another case of multifile analysis, remove this at a later time. 
+
+*SetUp*: Clean up the Runfile and produce main data units, builds the Activation Matrix, builds composit database that links FACTMapper to runfile. Evaluates wheter the runfile is a calibration file.
+
+*BuildEvents*: Finds a selected tail region of the runfile, locates clusters of events
+
+*VertexReconstructor*: Takes the cluster information and tracks potential trajectories, performes an extrapolation to the vertex point of the z axis 
+
+*plot*: stores methods for plotting and visualizations.
 
 ![See Documentation folder](Documentation/ProgramFlowChart.gif)
 
@@ -136,7 +142,11 @@ Ideas for future development
 | **Name**   | **Contact** |
 |-----|---|
 | Oline A. Ranum | olinear@uio.no | 
-    
+
+
+## Support 
+Primary developer: Oline Ranum - olinear@uio.no
+
     
 ## How to start with getting to know the project 
 ..............
