@@ -1,4 +1,4 @@
-# Online tool for Live Plotting of FACT Data
+# FACTAS - Fast Annihilation Cryogenic Tracker Analyzer Software
 
 <p align="center">
   <img src="Images/Figures/General_layout.png">
