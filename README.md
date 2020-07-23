@@ -51,7 +51,7 @@ Primary developer: Oline Ranum - olinear@uio.no
         
     settings: 
         settings.txt : This file contains all physical parameters of the detector. 
-                       Note that the parameters are currently described in the src_SetUp/LoadData.py class
+                       The parameters are described in a separate file under Documentation - settings.pdf
         
     Data_Example:
         Contains one example file that can be run from /Data/
