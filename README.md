@@ -1,5 +1,4 @@
-# FACTAS 
-# Fast Annihilation Cryogenic Tracker Analyzer Software
+# FACTAS - <br> Fast Annihilation Cryogenic Tracker Analyzer Software
 
 <p align="center">
   <img src="Images/Figures/General_layout.png">
