@@ -8,32 +8,25 @@ _Future Development:_ Future development consists of building a solid graphical 
 
 ### Installation
 
-The package will in the future be installable and runnable through a GUI, as per early development stages the code is run through the main.py file.
+The package will at a later time be wrapped as an executable, and run through a user interface. 
+As of now the program runs in a virtual environment directly through src/main.py.
 
-Exec system to be built
-
-#### Installing Virtual Environment (As of now)
+#### Setting up the Virtual Environment
 To set up the virtual environment please run from main dir
 
-    pipenv install
-    pipenv shell 
-    pip install -r requirements.txt
+    ../LivePlotting$: pipenv install
+    ../LivePlotting$: pipenv shell 
+    ../LivePlotting$: pip install -r requirements.txt
+  
 
+#### Usage
+Running from main.py:
     
-    
+    ../LivePlotting$: pipenv shell
+    ../LivePlotting/src$: python3 main.py
 
-### Usage
-Current usage:
 
-Run 1:
 
-    python3 main.py
-
-Run 2 in virtual shell (Not yet avilable from github - TODO: Setup a system for installing the virtual environment + packages):
-
-    source venv/bin/activate
-    python3 src/main.py
-    
 #### Unit Testing
 The unit tests can be run through two mechanisms, either by running the test_file 
 
