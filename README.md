@@ -8,49 +8,41 @@ _Future Development:_ Future development consists of building a solid graphical 
 
 ### Installation
 
-The package will in the future be installable and runnable through a GUI, as per early development stages the code is run through the main.py file.
+The package will at a later time be wrapped as an executable, and run through a user interface. 
+As of now the program runs in a virtual environment directly through src/main.py.
 
-Exec system to be built
-
-#### Installing Virtual Environment (As of now)
+#### Setting up the Virtual Environment
 To set up the virtual environment please run from main dir
 
-    pipenv install
-    pipenv shell 
-    pip install -r requirements.txt
+    ../LivePlotting$: pipenv install
+    ../LivePlotting$: pipenv shell 
+    ../LivePlotting$: pip install -r requirements.txt
+  
 
+#### Usage
+Running from main.py:
     
-    
+    ../LivePlotting$: pipenv shell
+    ../LivePlotting/src$: python3 main.py
 
-### Usage
-Current usage:
 
-Run 1:
 
-    python3 main.py
+#### Running Unit Tests
+Run Unit Testing by either running 
 
-Run 2 in virtual shell (Not yet avilable from github - TODO: Setup a system for installing the virtual environment + packages):
+    ../LivePlotting/src/src_UnitTesting/$: test_<Class>.py
+    ../LivePlotting/src/src_UnitTesting/$: test_SetUp.py
 
-    source venv/bin/activate
-    python3 src/main.py
-    
-#### Unit Testing
-The unit tests can be run through two mechanisms, either by running the test_file 
+or by running the modules directly
 
-    $ src/src_UnitTesting/test_SetUp.py
+    ../LivePlotting/src/src_<module>$: <module>.py
+    ../LivePlotting/src/src_SetUp$: SetUp.py
 
-or by running a class directly as a script on the if __name__ == '__main__' mechanics
-
-    $ src/src_SetUp/SetUp.py
-
-##### Consepts on unit tests
---- blahblahblah
- 
 
 ### Support 
 Primary developer: Oline Ranum - olinear@uio.no
 
-# Build of Program
+# Build
 
 ## Main Folder Structure
     
@@ -60,14 +52,10 @@ Primary developer: Oline Ranum - olinear@uio.no
     settings: 
         settings.txt : This file contains all physical parameters of the detector. 
                        Note that the parameters are currently described in the src_SetUp/LoadData.py class
-                       TODO: Write the stand alone description of the detector parameters.
         
     Data_Example:
         Contains one example file that can be run from /Data/
         
-    venv: 
-        Not currently avilable - Solution not yet placed for quickinstall virtualenv.
-        Must be in place to ensure compatability with local versions and packages. 
 
 
 ## Flow
