@@ -69,7 +69,7 @@ class plot():
     def hist(self, df_z):
         plt.close()
         ax1 = plt.axes()
-        ax1.hist(df_z.z_pos, weights=df_z.z_weight, bins = np.arange(-120,120,2))
+        ax1.hist(df_z.z_pos, weights=df_z.z_weight, bins = np.arange(-120,120,2), density = True)
         plt.title('FACT Z-Vertex')
         ax1.set_xlabel('z [mm]', fontsize = self.fsize,  labelpad =self.psize)
         ax1.set_ylabel('Count', fontsize = self.fsize, labelpad =self.psize)
@@ -84,7 +84,7 @@ class plot():
         plt.figure(figsize = (20,10))
         ax1 = plt.axes()
         ax1.plot(self.data['z_time'], self.data['z_pos'].values, '.')
-        ax1.set_xlabel('t [s]', fontsize = self.fsize,  labelpad =self.psize)
+        ax1.set_xlabel('t [ns]', fontsize = self.fsize,  labelpad =self.psize)
         ax1.set_ylabel('z-origin', fontsize = self.fsize, labelpad =self.psize)
         ax1.tick_params(axis='both', which='major', labelsize=self.fsize)
         ax1.tick_params(axis='both', which='minor', labelsize=self.fsize)
