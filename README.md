@@ -46,10 +46,6 @@ or by running the modules directly
     ../LivePlotting/src/src_<module>$: <module>.py
     ../LivePlotting/src/src_SetUp$: SetUp.py
 
-
-## Support 
-Primary developer: Oline Ranum - olinear@uio.no
-
 # Build
 
     Data_Example:
@@ -72,32 +68,54 @@ Primary developer: Oline Ranum - olinear@uio.no
         
 
 
-## Flow
+## FlowChart and FlowStructure
 
     Run through main.py.
 
-*Main.py*: Performs three tasks. 1) Loads param = Sets detector parameters. 2) Makes a call to the RunAnalysis modules, and sets whether to perform a single file or a multi-file analysis. 3) Makes final call to plotting and visualization.
+*Main.py*: Performs three tasks. 
+  1. Loads param, i.e. sets hardware parameters and configured analysisparameters as set in settings.txt. 
+  2. Makes the desiered analysis modules as a call to either a single file or a multi-file analysis. 
+  3. Makes final call to plotting and visualization modules.
 
-*RunAnalysis*: Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then calls to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided. When RunMultiFileAnalysis is called, a call is made to RunSingleFileAnalysis for each file in the directory. The information is then collected in a single large Dataframe containing the combined list of the vertices from all the individual files. 
+*LoadSettings*: Loads the param unit from the settings.csv file. 
 
-### Vertex Analysis 
-The standard analysis packages entail a vertex reconstruction along the z-axis, returning the position of a vertex and the weight of the vertex. 
-The weight of a vertex is defined as 1/(The number of potential particle origins), as the combinatorics might yield several solutions for potential vertices within a certain time/space region. 
+*RunAnalysis*: Contains initiator for Setup and Analysis. Allows for either running entire directories or singular files. 
+Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then calls to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided. When RunMultiFileAnalysis is called, a call is made to RunSingleFileAnalysis for each file in the directory. The information is then collected in a single large Dataframe containing the combined list of the vertices from all the individual files. !NB TO self: Single file analysis should just be another case of multifile analysis, remove this at a later time. 
 
-## FlowChart
-![See Documentation folder](Documentation/ProgramFlowChart.gif)
+*SetUp*: Clean up the Runfile and produce main data units, builds the Activation Matrix, builds composit database that links FACTMapper to runfile. Evaluates wheter the runfile is a calibration file.
+
+*BuildEvents*: Finds a selected tail region of the runfile, locates clusters of events
+
+*VertexReconstructor*: Takes the cluster information and tracks potential trajectories, performes an extrapolation to the vertex point of the z axis 
+
+*plot*: stores methods for plotting and visualizations.
+
+The program flowchart is presented in the figure below.
+
+<p align="center">
+  <img src="Documentation/ProgramFlowChart.gif">
+   <figcaption>Fig.2 - Softwear flowchart</figcaption>
+</p>
+
 
 ## Main Information Holders
 The analysis is run with three primary information holder structures. This data comes from two primeary sources, the first is the raw data put out by FACT, the second is the external input of physical detector parameters. 
 
-![See Image folder](Images/DataUnitChart.pdf )
+![See Image folder](Images/DataUnitChart.gif )
 
 1. *param:* Param is an instance of the class LoadData holding all the external parameters set in the file settings/settings.txt. Furthermore, the instance holds the coordinate mapping providing z and r coordinates of each singular fiber in the property param.CoordinateMatrix. 
         
 2. *MainData:* Main data holds the raw data file containing the fiber activation information of fiber number N, activation timestamp t, and the time over threshold tot. During the SetUp.CombineDatabases() procedure, this main dataframe is expanded to include the r, z positioning of each fiber N. I.e. a DataFrame on the column format ['N', 't', 'tot', 'z', 'r'].
 
 
+# FACT Basics
 
+The honeycomb structure of the sublayers are illustrated in the figure below, as well as the FACT mapping. 
+
+<p align="center">
+  <img src="Images/Figures/Honey_comb.png">
+   <figcaption>Fig.3 - Illustration of the interior structure of FACT showing the outer edges of the four superlayers sorted in two superlayers.</figcaption>
+</p>
 
 ## Raw Data Files
 The FACT system produces raw datafiles on the format of
@@ -132,10 +150,11 @@ Ideas for future development
 | **Name**   | **Contact** |
 |-----|---|
 | Oline A. Ranum | olinear@uio.no | 
-    
-    
-## How to start with getting to know the project 
-..............
+
+
+## Support 
+Primary developer: Oline Ranum - olinear@uio.no
+
 
 # Project status
 Early stages of development 
