@@ -1,10 +1,10 @@
 # Online tool for Live Plotting of FACT Data
 
-_Description:_ The package reads the raw FACT data files (see below) coming in from the FACT data acquisition system, and is processed from a local dir /Data/. The package contains classes for setting up the detector environment, and for running analysis over singular or multiple datasets. The package puts out several visualization modules for information stored in the FACT data, as described in greater detail below.
+The Fast Annihilation Cryogenic Tracker (FACT) detector aims to demonstrate the production of antihydrogen, as a step on the way towards performing a gravity measurment of antihydrogen by the AEgIS collaboration. This directory is the working directory for developing softwear for analysis on the ROOT-files that the detector is putting out. The package reads the ROOT files from a local drive linked under /Data/, and runs analysis either on single or multiple data files. The analysis is then displayed with several visualization modules, as described in further detail down below. 
 
 _Intention:_ This package intends to provide easy access to the FACT data, as it is streamed directly from the detector into the Data directory. This will make it easier to check that everything runs as it should, and to perform easy analysis on top of the data.
 
-_Future Development:_ Future development consists of building a solid graphical user interface and a simple installation mechanism for the package. A mechanism to easily add new analysis modules and adjust the detector parameters through settings.txt must come into place.
+_Future Development:_ The softwear is currently in it's initial phases of development, where the basic functionalities are implemented. Like for instance clustering algorithms and vertex reconstructions. Further development entails building a solid GUI system, exec systems and a wider range of visualization tools. One also has to develop a simple way to easily implement any physical changes on the detector. 
 
 ### Installation
 
