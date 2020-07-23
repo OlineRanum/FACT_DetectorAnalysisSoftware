@@ -85,15 +85,18 @@ The standard analysis packages entail a vertex reconstruction along the z-axis, 
 The weight of a vertex is defined as 1/(The number of potential particle origins), as the combinatorics might yield several solutions for potential vertices within a certain time/space region. 
 
 ## FlowChart
-![yo](Documentation/ProgramFlowChart.gif)
+![See Documentation folder](Documentation/ProgramFlowChart.gif)
 
 ## Main Information Holders
 The analysis is run with two primary information holders, as the system has two main sources of information. One is the raw data put out by FACT, the other being the external input of physical detector parameters. 
 
+![See Image folder](Images/DataUnitChart.pdf )
 
 1. *param:* Param is an instance of the class LoadData holding all the external parameters set in the file settings/settings.txt. Furthermore, the instance holds the coordinate mapping providing z and r coordinates of each singular fiber in the property param.CoordinateMatrix. 
         
 2. *MainData:* Main data holds the raw data file containing the fiber activation information of fiber number N, activation timestamp t, and the time over threshold tot. During the SetUp.CombineDatabases() procedure, this main dataframe is expanded to include the r, z positioning of each fiber N. I.e. a DataFrame on the column format ['N', 't', 'tot', 'z', 'r'].
+
+
 
 
 ## Raw Data Files
