@@ -12,6 +12,16 @@ The package will in the future be installable and runnable through a GUI, as per
 
 Exec system to be built
 
+#### Installing Virtual Environment (As of now)
+To set up the virtual environment please run from main dir
+
+    pipenv install
+    pipenv shell 
+    pip install -r requirements.txt
+
+    
+    
+
 ### Usage
 Current usage:
 
