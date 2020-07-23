@@ -88,7 +88,7 @@ The weight of a vertex is defined as 1/(The number of potential particle origins
 ![See Documentation folder](Documentation/ProgramFlowChart.gif)
 
 ## Main Information Holders
-The analysis is run with two primary information holders, as the system has two main sources of information. One is the raw data put out by FACT, the other being the external input of physical detector parameters. 
+The analysis is run with three primary information holder structures. This data comes from two primeary sources, the first is the raw data put out by FACT, the second is the external input of physical detector parameters. 
 
 ![See Image folder](Images/DataUnitChart.pdf )
 
