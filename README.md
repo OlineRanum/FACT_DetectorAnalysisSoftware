@@ -2,11 +2,13 @@
 
 The Fast Annihilation Cryogenic Tracker (FACT) detector aims to demonstrate the production of antihydrogen, as a step on the way towards performing a gravity measurment of antihydrogen by the AEgIS collaboration. This directory is the working directory for developing softwear for analysis on the ROOT-files that the detector is putting out. The package reads the ROOT files from a local drive linked under /Data/, and runs analysis either on single or multiple data files. The analysis is then displayed with several visualization modules, as described in further detail down below. 
 
+<br> <br>
 <p align="center">
   <img src="Images/Figures/General_layout.png">
-   <figcaption>Fig.1 - Trulli, Puglia, Italy.</figcaption>
+   <figcaption>Fig.1 - Illustration of FACT. Purple area - 4 scintillating fiber layers, 2 superlayers consisting of two sublayers. Gray area - Penning-Malmberg trap. The cut out is just for illustration, and not a part of the physical illustration</figcaption>
 </p>
 
+<br> <br>
 
 _Intention:_ This package intends to provide easy access to the FACT data, as it is streamed directly from the detector into the Data directory. This will make it easier to check that everything runs as it should, and to perform easy analysis on top of the data.
 
