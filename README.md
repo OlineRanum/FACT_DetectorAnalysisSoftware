@@ -90,7 +90,7 @@ The weight of a vertex is defined as 1/(The number of potential particle origins
 ## Main Information Holders
 The analysis is run with three primary information holder structures. This data comes from two primeary sources, the first is the raw data put out by FACT, the second is the external input of physical detector parameters. 
 
-![See Image folder](Images/DataUnitChart.pdf )
+![See Image folder](Images/DataUnitChart.gif )
 
 1. *param:* Param is an instance of the class LoadData holding all the external parameters set in the file settings/settings.txt. Furthermore, the instance holds the coordinate mapping providing z and r coordinates of each singular fiber in the property param.CoordinateMatrix. 
         
