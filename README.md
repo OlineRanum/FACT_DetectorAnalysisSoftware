@@ -77,11 +77,11 @@ Primary developer: Oline Ranum - olinear@uio.no
     Run through main.py.
 
 *Main.py*: Performs three tasks. 
-  1. Loads param = Sets detector parameters. 
-  2. Makes a call to the RunAnalysis modules, and sets whether to perform a single file or a multi-file analysis. 
-  3. Makes final call to plotting and visualization.
+  1. Loads param, i.e. sets hardware parameters and configured analysisparameters as set in settings.txt. 
+  2. Makes the desiered analysis modules as a call to either a single file or a multi-file analysis. 
+  3. Makes final call to plotting and visualization modules.
 
-*RunAnalysis*: Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then calls to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided. When RunMultiFileAnalysis is called, a call is made to RunSingleFileAnalysis for each file in the directory. The information is then collected in a single large Dataframe containing the combined list of the vertices from all the individual files. 
+*RunAnalysis*: Has two modules called RunSingleFileAnalysis and RunMultiFileAnalysis. RunSingleFileAnalysis builds a standard setup through the SetUp class and then calls to AnalysisToolBox [ATB]. When the ATB module Initiate_Standard_Analysis() is called a _standard_ analysis is performed, and a pandas DataFrame containing the vertex positions and weights are provided. When RunMultiFileAnalysis is called, a call is made to RunSingleFileAnalysis for each file in the directory. The information is then collected in a single large Dataframe containing the combined list of the vertices from all the individual files. !NB TO self: Single file analysis should just be another case of multifile analysis, remove this at a later time. 
 
 
 ![See Documentation folder](Documentation/ProgramFlowChart.gif)
