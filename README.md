@@ -14,12 +14,12 @@ _Intention:_ This package intends to provide easy access to the FACT data, as it
 
 _Future Development:_ The softwear is currently in it's initial phases of development, where the basic functionalities are implemented. Like for instance clustering algorithms and vertex reconstructions. Further development entails building a solid GUI system, exec systems and a wider range of visualization tools. One also has to develop a simple way to easily implement any physical changes on the detector. 
 
-### Installation
+## Installation
 
 The package will at a later time be wrapped as an executable, and run through a user interface. 
 As of now the program runs in a virtual environment directly through src/main.py.
 
-#### Setting up the Virtual Environment
+### Setting up the Virtual Environment
 To set up the virtual environment please run from main dir
 
     ../LivePlotting$: pipenv install
@@ -27,7 +27,7 @@ To set up the virtual environment please run from main dir
     ../LivePlotting$: pip install -r requirements.txt
   
 
-#### Usage
+### Usage
 Running from main.py:
     
     ../LivePlotting$: pipenv shell
@@ -35,7 +35,7 @@ Running from main.py:
 
 
 
-#### Running Unit Tests
+### Running Unit Tests
 Run Unit Testing by either running 
 
     ../LivePlotting/src/src_UnitTesting/$: test_<Class>.py
@@ -47,22 +47,28 @@ or by running the modules directly
     ../LivePlotting/src/src_SetUp$: SetUp.py
 
 
-### Support 
+## Support 
 Primary developer: Oline Ranum - olinear@uio.no
 
 # Build
 
-## Main Folder Structure
+    Data_Example:
+          Contains one example file that can be run from /Data/
     
-    src:        
-        The source code of the program. 
+    Documentation:
+          Contains documentation files - settings.pdf (Parameter description)
+    
+    Images:
+          Display examples of vizualization modules, figures and illustrations of physics
         
     settings: 
-        settings.txt : This file contains all physical parameters of the detector. 
-                       The parameters are described in a separate file under Documentation - settings.pdf
+          settings.txt Contains all physical parameters of the detector. The parameters are described in a separate file under Documentation - settings.pdf
         
-    Data_Example:
-        Contains one example file that can be run from /Data/
+    src:        
+          Source code of the program. 
+
+
+        
         
 
 
