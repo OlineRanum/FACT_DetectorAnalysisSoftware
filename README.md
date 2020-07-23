@@ -27,23 +27,22 @@ Running from main.py:
 
 
 
-#### Unit Testing
-The unit tests can be run through two mechanisms, either by running the test_file 
+#### Running Unit Tests
+Run Unit Testing by either running 
 
-    $ src/src_UnitTesting/test_SetUp.py
+    ../LivePlotting/src/src_UnitTesting/$: test_<Class>.py
+    ../LivePlotting/src/src_UnitTesting/$: test_SetUp.py
 
-or by running a class directly as a script on the if __name__ == '__main__' mechanics
+or by running the modules directly
 
-    $ src/src_SetUp/SetUp.py
+    ../LivePlotting/src/src_<module>$: <module>.py
+    ../LivePlotting/src/src_SetUp$: SetUp.py
 
-##### Consepts on unit tests
---- blahblahblah
- 
 
 ### Support 
 Primary developer: Oline Ranum - olinear@uio.no
 
-# Build of Program
+# Build
 
 ## Main Folder Structure
     
@@ -53,14 +52,10 @@ Primary developer: Oline Ranum - olinear@uio.no
     settings: 
         settings.txt : This file contains all physical parameters of the detector. 
                        Note that the parameters are currently described in the src_SetUp/LoadData.py class
-                       TODO: Write the stand alone description of the detector parameters.
         
     Data_Example:
         Contains one example file that can be run from /Data/
         
-    venv: 
-        Not currently avilable - Solution not yet placed for quickinstall virtualenv.
-        Must be in place to ensure compatability with local versions and packages. 
 
 
 ## Flow
