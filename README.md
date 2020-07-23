@@ -118,7 +118,7 @@ The honeycomb structure of the sublayers are illustrated in the figure below, as
 </p>
 
 ## Raw Data Files
-The FACT system produces raw datafiles on the format of
+The FACT system produces raw datafiles on the following format. Eatch time a fiber fires off a signal is sent containing the information of the fiber number N, the time at which the fiber went off and the amount of time the fiber stayed on. 
 
 | **N**   | **t** | **tot** |
 |-----|---|-----|
@@ -134,7 +134,21 @@ t: The time stamp when a fiber fiers
 tot: The time the fiber stays activated after a fiber has fiered, proportional to the incoming energy of the fiber
 
 # Visualization Output
-![](Images/test_gif.gif)
+This module is ment to be expanded upon to open up for more features. 
+
+## OutPut Basics
+
+For each Runfile the system has the ability to put out a direct stream of the fact detector going off, as illustrated in the figure below. 
+<p align="center">
+  <img src="Images/test_gif.gif">
+   <figcaption>Fig.4 - </figcaption>
+</p>
+
+After running a multifile analysis collecting data from multiple runfiles the softwear presents a statistical overwiev of the origin  
+Denote, the current results are subjected to a bug that needs reviewing, the following illustrations are only ment as an example on the type of data presented. 
+
+
+
 
 
 ## Issue/Project Management
