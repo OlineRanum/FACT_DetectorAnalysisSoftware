@@ -71,7 +71,7 @@ The standard analysis packages entail a vertex reconstruction along the z-axis, 
 The weight of a vertex is defined as 1/(The number of potential particle origins), as the combinatorics might yield several solutions for potential vertices within a certain time/space region. 
 
 ## FlowChart
-![yo](Images/ProgramFlowChart.gif)
+![yo](Documentation/ProgramFlowChart.gif)
 
 ## Main Information Holders
 The analysis is run with two primary information holders, as the system has two main sources of information. One is the raw data put out by FACT, the other being the external input of physical detector parameters. 
