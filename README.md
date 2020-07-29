@@ -1,4 +1,3 @@
-TEST ON PULL
 
 # FACTAS - <br> Fast Annihilation Cryogenic Tracker Analysis Software
 
